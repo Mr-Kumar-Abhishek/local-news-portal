@@ -54,6 +54,7 @@ $routes->group('{locale}', static function ($routes) {
     $routes->post('forgot-password', 'Auth::forgotPassword');
     $routes->get('reset-password/(:any)', 'Auth::resetPassword/$1');
     $routes->post('reset-password/(:any)', 'Auth::resetPassword/$1');
+    $routes->get('verify-email/(:any)', 'Auth::verifyEmail/$1');
     // Comment submission
     $routes->post('comment/(:num)', 'News::addComment/$1');
 

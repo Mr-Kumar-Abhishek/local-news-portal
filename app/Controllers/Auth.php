@@ -107,16 +107,22 @@ class Auth extends BaseController
                      . view('templates/footer');
             }
 
+            $token = bin2hex(random_bytes(32));
+
             $this->userModel->insert([
-                'username' => $this->request->getPost('username'),
-                'email'    => $this->request->getPost('email'),
-                'password' => $this->request->getPost('password'),
-                'full_name'=> $this->request->getPost('full_name'),
-                'role'     => 'reader',
+                'username'           => $this->request->getPost('username'),
+                'email'              => $this->request->getPost('email'),
+                'password'           => $this->request->getPost('password'),
+                'full_name'          => $this->request->getPost('full_name'),
+                'role'               => 'reader',
+                'status'             => 0,
+                'verification_token' => $token,
             ]);
 
+            log_message('info', 'Verification Link for ' . $this->request->getPost('email') . ': ' . site_url($this->locale . '/verify-email/' . $token));
+
             return redirect()->to('/' . $this->locale . '/login')
-                           ->with('message', lang('News.register_success'));
+                            ->with('message', lang('News.register_success'));
         }
 
         return view('templates/header', $data)
@@ -260,5 +266,36 @@ class Auth extends BaseController
         return view('templates/header', $data)
              . view('auth/reset_password', ['locale' => $this->locale, 'token' => $token, 'error' => null])
              . view('templates/footer');
+    }
+
+    public function verifyEmail(string $token): string|\CodeIgniter\HTTP\RedirectResponse
+    {
+        if ($this->isLoggedIn()) {
+            return redirect()->to('/' . $this->locale . '/');
+        }
+
+        $user = $this->userModel->where('verification_token', $token)
+                                ->where('status', 0)
+                                ->first();
+
+        if (!$user) {
+            $data = [
+                'locale' => $this->locale,
+                'title'  => lang('News.login'),
+            ];
+            return view('templates/header', $data)
+                 . view('auth/login', ['error' => lang('News.invalid_or_expired_verification_token'), 'locale' => $this->locale])
+                 . view('templates/footer');
+        }
+
+        // Activate user and clear token
+        $this->userModel->update($user->id, [
+            'status'             => 1,
+            'verification_token' => null,
+            'email_verified_at'  => \CodeIgniter\I18n\Time::now()->toDateTimeString(),
+        ]);
+
+        return redirect()->to('/' . $this->locale . '/login')
+                        ->with('message', lang('News.email_verified_success'));
     }
 }

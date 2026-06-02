@@ -38,6 +38,71 @@ final class AuthTest extends CIUnitTestCase
 
         // Registration should redirect to /en/login
         $response->assertRedirectTo('en/login');
+
+        // Check user is created with status = 0 and verification_token is set
+        $model = new \App\Models\UserModel();
+        $user = $model->where('email', 'newuser@example.com')->first();
+        $this->assertNotNull($user);
+        $this->assertEquals(0, $user->status);
+        $this->assertNotEmpty($user->verification_token);
+    }
+
+    public function testUnverifiedUserCannotLogin(): void
+    {
+        // First register the user (which sets status = 0)
+        $this->post('en/register', [
+            'username'  => 'unverifieduser',
+            'email'     => 'unverified@example.com',
+            'password'  => 'password123',
+            'full_name' => 'Unverified User',
+        ]);
+
+        // Attempt login (should fail since status = 0 and attemptLogin filters status = 1)
+        $response = $this->post('en/login', [
+            'email'    => 'unverified@example.com',
+            'password' => 'password123',
+        ]);
+
+        // It should show login view with invalid credentials
+        $response->assertStatus(200);
+        $response->assertSee(lang('News.invalid_credentials'));
+        $this->assertNull(session()->get('user_id'));
+    }
+
+    public function testVerifyEmailWithInvalidToken(): void
+    {
+        $response = $this->get('en/verify-email/invalidtoken');
+        
+        // Should render login view showing error
+        $response->assertStatus(200);
+        $response->assertSee(lang('News.invalid_or_expired_verification_token'));
+    }
+
+    public function testVerifyEmailWithValidToken(): void
+    {
+        // First register the user
+        $this->post('en/register', [
+            'username'  => 'verifyuser',
+            'email'     => 'verifyme@example.com',
+            'password'  => 'password123',
+            'full_name' => 'Verify User',
+        ]);
+
+        $model = new \App\Models\UserModel();
+        $user = $model->where('email', 'verifyme@example.com')->first();
+        $token = $user->verification_token;
+
+        // Perform verification request
+        $response = $this->get('en/verify-email/' . $token);
+
+        // Verification should redirect to login
+        $response->assertRedirectTo('en/login');
+
+        // User should now be active (status = 1) and token cleared
+        $updatedUser = $model->where('email', 'verifyme@example.com')->first();
+        $this->assertEquals(1, $updatedUser->status);
+        $this->assertNull($updatedUser->verification_token);
+        $this->assertNotNull($updatedUser->email_verified_at);
     }
 
     public function testLoginSuccess(): void

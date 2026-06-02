@@ -92,6 +92,10 @@ return [
     'reset_link_sent'         => 'If the email matches our records, a password reset link has been sent.',
     'invalid_or_expired_token'=> 'The password reset token is invalid or has expired.',
     'password_reset_success'  => 'Your password has been successfully reset. You can now login.',
+    'register_success'        => 'Registration successful! Please check your email to verify your account.',
+    'email_verified_success'  => 'Email verified successfully! You can now log in.',
+    'invalid_or_expired_verification_token' => 'The email verification link is invalid or has expired.',
+    'please_verify_email'     => 'Please verify your email to log in.',
 
     // Admin
     'admin_dashboard'       => 'Dashboard',
