@@ -11,10 +11,10 @@ class Media extends BaseController
         $mediaModel = new MediaModel();
 
         $data = [
-            'locale'    => $this->locale,
-            'title'     => 'Media Library',
-            'media'     => $mediaModel->getRecentMedia(50),
-            'user_name' => $this->getCurrentUserName(),
+            'locale'      => $this->locale,
+            'title'       => 'Media Library',
+            'media_files' => $mediaModel->getRecentMedia(50),
+            'user_name'   => $this->getCurrentUserName(),
         ];
 
         return view('admin/templates/header', $data)
@@ -39,15 +39,49 @@ class Media extends BaseController
 
         $file->move(FCPATH . $filePath, $newName);
 
+        $mimeType = $file->getMimeType();
+        $thumbnailPath = null;
+        $mediumPath = null;
+
+        // Perform resizing & thumbnail generation for images
+        if (strpos($mimeType, 'image/') === 0) {
+            $imageService = \Config\Services::image();
+            $originalFullPath = FCPATH . $filePath . '/' . $newName;
+
+            // Generate medium image (resize to fit 1200x1200px)
+            $mediumFullPath = FCPATH . $filePath . '/medium_' . $newName;
+            try {
+                $imageService->withFile($originalFullPath)
+                             ->resize(1200, 1200, true, 'auto')
+                             ->save($mediumFullPath);
+                $mediumPath = $filePath . '/medium_' . $newName;
+            } catch (\Exception $e) {
+                log_message('error', 'Failed to create medium image: ' . $e->getMessage());
+            }
+
+            // Generate thumbnail (fit/crop to 150x150px)
+            $thumbFullPath = FCPATH . $filePath . '/thumb_' . $newName;
+            try {
+                $imageService->withFile($originalFullPath)
+                             ->fit(150, 150, 'center')
+                             ->save($thumbFullPath);
+                $thumbnailPath = $filePath . '/thumb_' . $newName;
+            } catch (\Exception $e) {
+                log_message('error', 'Failed to create thumbnail: ' . $e->getMessage());
+            }
+        }
+
         $mediaModel = new MediaModel();
         $mediaModel->insert([
-            'filename'    => $file->getName(),
-            'filepath'    => $filePath . '/' . $newName,
-            'filetype'    => $file->getMimeType(),
-            'filesize'    => $file->getSize(),
-            'alt_text_en' => $this->request->getPost('alt_text_en'),
-            'alt_text_hi' => $this->request->getPost('alt_text_hi'),
-            'uploaded_by' => $this->getCurrentUserId(),
+            'filename'       => $file->getName(),
+            'filepath'       => $filePath . '/' . $newName,
+            'filetype'       => $mimeType,
+            'filesize'       => $file->getSize(),
+            'alt_text_en'    => $this->request->getPost('alt_text'),
+            'alt_text_hi'    => $this->request->getPost('alt_text'),
+            'thumbnail_path' => $thumbnailPath,
+            'medium_path'    => $mediumPath,
+            'uploaded_by'    => $this->getCurrentUserId(),
         ]);
 
         return redirect()->to('/' . $this->locale . '/admin/media')
@@ -60,10 +94,16 @@ class Media extends BaseController
         $media = $mediaModel->find($id);
 
         if ($media) {
-            // Delete physical file
-            $fullPath = FCPATH . $media->filepath;
-            if (file_exists($fullPath)) {
-                unlink($fullPath);
+            // Delete physical files
+            $filesToDelete = [
+                FCPATH . $media['filepath'],
+                !empty($media['thumbnail_path']) ? FCPATH . $media['thumbnail_path'] : null,
+                !empty($media['medium_path']) ? FCPATH . $media['medium_path'] : null,
+            ];
+            foreach ($filesToDelete as $file) {
+                if ($file && file_exists($file)) {
+                    unlink($file);
+                }
             }
 
             $mediaModel->delete($id);

@@ -60,34 +60,41 @@
 <?php if (!empty($media_files)) : ?>
     <div class="row g-3">
         <?php foreach ($media_files as $media) : ?>
+        <?php 
+            $ext = pathinfo($media['filepath'], PATHINFO_EXTENSION);
+            $isImage = in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'webp', 'gif']);
+            $altText = ($locale === 'hi') ? ($media['alt_text_hi'] ?: $media['alt_text_en']) : ($media['alt_text_en'] ?: $media['alt_text_hi']);
+            $displayAlt = $altText ?: basename($media['filepath']);
+            $displaySrc = !empty($media['thumbnail_path']) ? base_url($media['thumbnail_path']) : base_url($media['filepath']);
+        ?>
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
             <div class="card shadow-sm h-100">
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                    <?php if (in_array(pathinfo($media['file_path'], PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'webp', 'gif'])) : ?>
-                        <img src="<?= base_url($media['file_path']) ?>" alt="<?= esc($media['alt_text'] ?? '') ?>"
+                    <?php if ($isImage) : ?>
+                        <img src="<?= $displaySrc ?>" alt="<?= esc($displayAlt) ?>"
                              class="img-fluid" style="max-height: 150px; object-fit: cover;">
                     <?php else : ?>
                         <i class="bi bi-file-earmark-text fs-1 text-muted"></i>
                     <?php endif; ?>
                 </div>
                 <div class="card-body p-2">
-                    <p class="card-text small mb-1 text-truncate">
-                        <?= esc($media['alt_text'] ?: basename($media['file_path'])) ?>
+                    <p class="card-text small mb-1 text-truncate" title="<?= esc($displayAlt) ?>">
+                        <?= esc($displayAlt) ?>
                     </p>
                     <small class="text-muted">
-                        <?= strtoupper(pathinfo($media['file_path'], PATHINFO_EXTENSION)) ?>
+                        <?= strtoupper($ext) ?>
                         &middot;
-                        <?php if ($media['file_size'] > 1048576) : ?>
-                            <?= round($media['file_size'] / 1048576, 1) ?> MB
-                        <?php elseif ($media['file_size'] > 1024) : ?>
-                            <?= round($media['file_size'] / 1024, 1) ?> KB
+                        <?php if ($media['filesize'] > 1048576) : ?>
+                            <?= round($media['filesize'] / 1048576, 1) ?> MB
+                        <?php elseif ($media['filesize'] > 1024) : ?>
+                            <?= round($media['filesize'] / 1024, 1) ?> KB
                         <?php else : ?>
-                            <?= $media['file_size'] ?> B
+                            <?= $media['filesize'] ?> B
                         <?php endif; ?>
                     </small>
                     <div class="mt-2 d-flex justify-content-between">
                         <button type="button" class="btn btn-sm btn-outline-primary"
-                                onclick="copyUrl('<?= base_url($media['file_path']) ?>')"
+                                onclick="copyUrl('<?= base_url($media['filepath']) ?>')"
                                 title="Copy URL">
                             <i class="bi bi-clipboard"></i>
                         </button>

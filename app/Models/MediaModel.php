@@ -9,12 +9,13 @@ class MediaModel extends Model
     protected $table            = 'media';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'object';
+    protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'filename', 'filepath', 'filetype', 'filesize',
         'alt_text_en', 'alt_text_hi', 'uploaded_by',
+        'thumbnail_path', 'medium_path',
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -40,7 +41,7 @@ class MediaModel extends Model
         $builder->orderBy('media.created_at', 'DESC');
         $builder->limit($limit);
 
-        return $builder->get()->getResult();
+        return $builder->get()->getResultArray();
     }
 
     public function getImages(string $type = 'image'): array
@@ -55,7 +56,7 @@ class MediaModel extends Model
 
         $builder->orderBy('media.created_at', 'DESC');
 
-        return $builder->get()->getResult();
+        return $builder->get()->getResultArray();
     }
 
     public function getTotalSize(): int
