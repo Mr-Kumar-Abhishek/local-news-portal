@@ -19,6 +19,16 @@ class Home extends BaseController
         $this->tagModel      = new TagModel();
     }
 
+    /**
+     * Redirect to the appropriate locale prefix.
+     * For root access without locale, detects or defaults to 'en'.
+     */
+    public function redirectLocale(string $locale = null): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $locale = ($locale && in_array($locale, ['en', 'hi'])) ? $locale : 'en';
+        return redirect()->to('/' . $locale);
+    }
+
     public function index(): string
     {
         $data['featured_news']   = $this->articleModel->getFeaturedArticles(5);

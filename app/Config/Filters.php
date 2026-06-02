@@ -34,6 +34,7 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'auth'          => \App\Filters\AuthFilter::class,
     ];
 
     /**
@@ -90,7 +91,7 @@ class Filters extends BaseFilters
      * 'POST' => ['foo', 'bar']
      *
      * If you use this, you should disable auto-routing because auto-routing
-     * permits any HTTP method to access a controller. Accessing the controller
+     * permits any HTTP method to access a controller. Using the controller
      * with a method you don't expect could bypass the filter.
      *
      * @var array<string, list<string>>
@@ -106,5 +107,13 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'auth' => [
+            'before' => [
+                'en/admin/*',
+                'hi/admin/*',
+                'admin/*',
+            ],
+        ],
+    ];
 }
