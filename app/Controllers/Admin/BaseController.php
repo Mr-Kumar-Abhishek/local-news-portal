@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\RequestInterface;
@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 
 abstract class BaseController extends Controller
 {
-    protected $helpers = ['url', 'form', 'text'];
+    protected $helpers = ['url', 'form', 'text', 'html'];
 
     protected string $locale = 'en';
 
@@ -17,30 +17,13 @@ abstract class BaseController extends Controller
     {
         parent::initController($request, $response, $logger);
 
-        // Set locale from URL segment or session
         $this->locale = service('request')->getLocale() ?? 'en';
         service('language')->setLocale($this->locale);
-        service('request')->setLocale($this->locale);
-    }
-
-    protected function getLanguagePrefix(): string
-    {
-        return $this->locale === 'hi' ? '/hi' : '/en';
-    }
-
-    protected function getCurrentUrl(): string
-    {
-        return current_url();
     }
 
     protected function isAdminLoggedIn(): bool
     {
         return session()->has('is_admin_logged_in') && session()->get('is_admin_logged_in') === true;
-    }
-
-    protected function isLoggedIn(): bool
-    {
-        return session()->has('user_id');
     }
 
     protected function getCurrentUserId(): ?int
@@ -51,5 +34,10 @@ abstract class BaseController extends Controller
     protected function getCurrentUserRole(): ?string
     {
         return session()->get('user_role');
+    }
+
+    protected function getCurrentUserName(): ?string
+    {
+        return session()->get('user_full_name');
     }
 }
