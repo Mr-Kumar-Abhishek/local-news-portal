@@ -63,6 +63,9 @@ Vagrantfile
 /writable/debugbar/*
 !/writable/debugbar/index.html
 
+# SQLite database files (created by migrations)
+*.db
+
 php_errors.log
 
 #-------------------------
