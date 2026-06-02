@@ -30,12 +30,12 @@ class CreateHindBiharTables extends Migration
         $this->forge->createTable('users', true);
 
         // Add CHECK constraints for ENUM-like behaviour on users table
-        $this->db->query("CREATE TRIGGER IF NOT EXISTS users_role_check BEFORE INSERT ON users FOR EACH ROW
+        $this->db->query("CREATE TRIGGER IF NOT EXISTS users_role_check BEFORE INSERT ON " . $this->db->prefixTable('users') . " FOR EACH ROW
             WHEN NEW.role NOT IN ('admin', 'editor', 'journalist', 'reader')
             BEGIN
                 SELECT RAISE(ABORT, 'Invalid role value. Must be admin, editor, journalist, or reader.');
             END;");
-        $this->db->query("CREATE TRIGGER IF NOT EXISTS users_language_check BEFORE INSERT ON users FOR EACH ROW
+        $this->db->query("CREATE TRIGGER IF NOT EXISTS users_language_check BEFORE INSERT ON " . $this->db->prefixTable('users') . " FOR EACH ROW
             WHEN NEW.language_preference NOT IN ('hi', 'en')
             BEGIN
                 SELECT RAISE(ABORT, 'Invalid language value. Must be hi or en.');
@@ -100,17 +100,17 @@ class CreateHindBiharTables extends Migration
         $this->forge->createTable('articles', true);
 
         // Add CHECK constraints for ENUM-like behaviour on articles table
-        $this->db->query("CREATE TRIGGER IF NOT EXISTS articles_language_check BEFORE INSERT ON articles FOR EACH ROW
+        $this->db->query("CREATE TRIGGER IF NOT EXISTS articles_language_check BEFORE INSERT ON " . $this->db->prefixTable('articles') . " FOR EACH ROW
             WHEN NEW.language NOT IN ('hi', 'en', 'both')
             BEGIN
                 SELECT RAISE(ABORT, 'Invalid language value. Must be hi, en, or both.');
             END;");
-        $this->db->query("CREATE TRIGGER IF NOT EXISTS articles_section_check BEFORE INSERT ON articles FOR EACH ROW
+        $this->db->query("CREATE TRIGGER IF NOT EXISTS articles_section_check BEFORE INSERT ON " . $this->db->prefixTable('articles') . " FOR EACH ROW
             WHEN NEW.news_section NOT IN ('international', 'national', 'local')
             BEGIN
                 SELECT RAISE(ABORT, 'Invalid news_section value.');
             END;");
-        $this->db->query("CREATE TRIGGER IF NOT EXISTS articles_status_check BEFORE INSERT ON articles FOR EACH ROW
+        $this->db->query("CREATE TRIGGER IF NOT EXISTS articles_status_check BEFORE INSERT ON " . $this->db->prefixTable('articles') . " FOR EACH ROW
             WHEN NEW.status NOT IN ('draft', 'published', 'archived')
             BEGIN
                 SELECT RAISE(ABORT, 'Invalid status value.');
@@ -143,7 +143,7 @@ class CreateHindBiharTables extends Migration
         $this->forge->createTable('comments', true);
 
         // Add CHECK constraint for comment status
-        $this->db->query("CREATE TRIGGER IF NOT EXISTS comments_status_check BEFORE INSERT ON comments FOR EACH ROW
+        $this->db->query("CREATE TRIGGER IF NOT EXISTS comments_status_check BEFORE INSERT ON " . $this->db->prefixTable('comments') . " FOR EACH ROW
             WHEN NEW.status NOT IN ('pending', 'approved', 'rejected')
             BEGIN
                 SELECT RAISE(ABORT, 'Invalid comment status value.');

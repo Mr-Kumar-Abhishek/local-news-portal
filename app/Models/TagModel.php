@@ -6,7 +6,6 @@ use CodeIgniter\Model;
 
 class TagModel extends Model
 {
-    protected $DBGroup          = 'default';
     protected $table            = 'tags';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;

@@ -97,7 +97,7 @@ class Auth extends BaseController
                 'role'     => 'reader',
             ]);
 
-            return redirect()->to('/' . $this->locale . '/auth/login')
+            return redirect()->to('/' . $this->locale . '/login')
                            ->with('message', lang('News.register_success'));
         }
 

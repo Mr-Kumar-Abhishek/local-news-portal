@@ -11,7 +11,7 @@ class AuthFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (!session()->has('is_logged_in') || session()->get('is_logged_in') !== true) {
-            return redirect()->to('/' . $request->getLocale() . '/auth/login')
+            return redirect()->to('/' . $request->getLocale() . '/login')
                            ->with('error', 'Please login first');
         }
 

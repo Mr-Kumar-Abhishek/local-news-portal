@@ -8,6 +8,7 @@ return [
     'view_all'              => 'सभी देखें',
     'search'                => 'खोजें',
     'search_placeholder'    => 'लेख खोजें...',
+    'search_results'        => 'खोज परिणाम',
     'no_results'            => 'कोई लेख नहीं मिला.',
     'no_results_desc'       => 'अलग कीवर्ड आज़माएं या श्रेणियां ब्राउज़ करें।',
     'page_title_home'       => 'होम - हिंद बिहार',

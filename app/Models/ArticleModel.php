@@ -6,7 +6,6 @@ use CodeIgniter\Model;
 
 class ArticleModel extends Model
 {
-    protected $DBGroup          = 'default';
     protected $table            = 'articles';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;

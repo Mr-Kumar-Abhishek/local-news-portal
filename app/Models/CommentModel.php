@@ -6,7 +6,6 @@ use CodeIgniter\Model;
 
 class CommentModel extends Model
 {
-    protected $DBGroup          = 'default';
     protected $table            = 'comments';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;

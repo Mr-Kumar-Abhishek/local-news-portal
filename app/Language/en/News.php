@@ -8,6 +8,7 @@ return [
     'view_all'              => 'View All',
     'search'                => 'Search',
     'search_placeholder'    => 'Search articles...',
+    'search_results'        => 'Search Results',
     'no_results'            => 'No articles found.',
     'no_results_desc'       => 'Try different keywords or browse categories.',
     'page_title_home'       => 'Home - Hind Bihar',

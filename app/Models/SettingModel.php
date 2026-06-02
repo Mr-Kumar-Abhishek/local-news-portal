@@ -6,7 +6,6 @@ use CodeIgniter\Model;
 
 class SettingModel extends Model
 {
-    protected $DBGroup          = 'default';
     protected $table            = 'settings';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;

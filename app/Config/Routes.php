@@ -44,14 +44,12 @@ $routes->group('{locale}', static function ($routes) {
     // Search
     $routes->get('search', 'Search::index');
     $routes->get('search/autocomplete', 'Search::autocomplete');
-
     // Authentication
     $routes->get('login', 'Auth::login');
-    $routes->post('login', 'Auth::loginAttempt');
+    $routes->post('login', 'Auth::login');
     $routes->get('register', 'Auth::register');
-    $routes->post('register', 'Auth::registerAttempt');
+    $routes->post('register', 'Auth::register');
     $routes->get('logout', 'Auth::logout');
-
     // Comment submission
     $routes->post('comment/(:num)', 'News::addComment/$1');
 

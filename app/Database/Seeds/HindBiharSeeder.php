@@ -26,7 +26,7 @@ class HindBiharSeeder extends Seeder
             'status'              => 1,
         ];
         $userModel->insert($adminData);
-        echo "  - Admin user created (admin@hindbihar.com / admin123)\n";
+        $this->logMessage("  - Admin user created (admin@hindbihar.com / admin123)\n");
 
         // ========== Create Categories ==========
         $categoryModel = new CategoryModel();
@@ -92,7 +92,7 @@ class HindBiharSeeder extends Seeder
         foreach ($categories as $category) {
             $categoryModel->insert($category);
         }
-        echo '  - ' . count($categories) . " categories created\n";
+        $this->logMessage('  - ' . count($categories) . " categories created\n");
 
         // ========== Create Tags ==========
         $tagModel = new TagModel();
@@ -112,8 +112,15 @@ class HindBiharSeeder extends Seeder
         foreach ($tags as $tag) {
             $tagModel->insert($tag);
         }
-        echo '  - ' . count($tags) . " tags created\n";
+        $this->logMessage('  - ' . count($tags) . " tags created\n");
 
-        echo "\n✅ Seeding completed successfully!\n";
+        $this->logMessage("\n✅ Seeding completed successfully!\n");
+    }
+
+    private function logMessage(string $message): void
+    {
+        if (ENVIRONMENT !== 'testing') {
+            echo $message;
+        }
     }
 }

@@ -169,9 +169,9 @@ class Database extends Config
         'hostname'    => '',
         'username'    => '',
         'password'    => '',
-        'database'    => ':memory:',
+        'database'    => WRITEPATH . 'testing.db',
         'DBDriver'    => 'SQLite3',
-        'DBPrefix'    => 'db_',  // Needed to ensure we're working correctly with prefixes live. DO NOT REMOVE FOR CI DEVS
+        'DBPrefix'    => '',
         'pConnect'    => false,
         'DBDebug'     => true,
         'charset'     => 'utf8',
