@@ -8,7 +8,7 @@
         </div>
         <?php endif; ?>
 
-        <form action="/<?= $locale ?>/auth/register" method="POST">
+        <form action="/<?= $locale ?>/register" method="POST">
             <?= csrf_field() ?>
             <div class="mb-3">
                 <label class="form-label"><?= lang('News.full_name') ?></label>
@@ -30,7 +30,7 @@
         </form>
 
         <p class="text-center mt-3 mb-0">
-            <?= lang('News.have_account') ?> <a href="/<?= $locale ?>/auth/login"><?= lang('News.login') ?></a>
+            <?= lang('News.have_account') ?> <a href="/<?= $locale ?>/login"><?= lang('News.login') ?></a>
         </p>
     </div>
 </div>

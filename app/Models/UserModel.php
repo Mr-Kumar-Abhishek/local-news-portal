@@ -15,6 +15,8 @@ class UserModel extends Model
     protected $allowedFields    = [
         'username', 'email', 'password', 'full_name',
         'role', 'language_preference', 'status',
+        'remember_token', 'remember_expires_at',
+        'reset_token', 'reset_expires_at',
     ];
 
     protected bool $allowEmptyInserts = false;

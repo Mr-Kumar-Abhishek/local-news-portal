@@ -82,6 +82,16 @@ return [
     'register_title'        => 'रजिस्टर',
     'register_button'       => 'रजिस्टर',
     'register_have_account' => 'पहले से खाता है?',
+    'forgot_password_title'   => 'पासवर्ड भूल गए',
+    'forgot_password_link'    => 'पासवर्ड भूल गए?',
+    'forgot_password_button'  => 'रीसेट लिंक भेजें',
+    'reset_password_title'    => 'पासवर्ड रीसेट करें',
+    'reset_password_button'   => 'पासवर्ड रीसेट करें',
+    'confirm_password'        => 'पासवर्ड की पुष्टि करें',
+    'email_not_found'         => 'इस ईमेल पते के साथ कोई खाता नहीं मिला।',
+    'reset_link_sent'         => 'यदि ईमेल हमारे रिकॉर्ड से मेल खाता है, तो पासवर्ड रीसेट लिंक भेज दिया गया है।',
+    'invalid_or_expired_token'=> 'पासवर्ड रीसेट टोकन अमान्य है या समाप्त हो गया है।',
+    'password_reset_success'  => 'आपका पासवर्ड सफलतापूर्वक रीसेट कर दिया गया है। अब आप लॉगिन कर सकते हैं।',
 
     // Admin
     'admin_dashboard'       => 'डैशबोर्ड',

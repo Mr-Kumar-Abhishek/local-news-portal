@@ -50,6 +50,10 @@ $routes->group('{locale}', static function ($routes) {
     $routes->get('register', 'Auth::register');
     $routes->post('register', 'Auth::register');
     $routes->get('logout', 'Auth::logout');
+    $routes->get('forgot-password', 'Auth::forgotPassword');
+    $routes->post('forgot-password', 'Auth::forgotPassword');
+    $routes->get('reset-password/(:any)', 'Auth::resetPassword/$1');
+    $routes->post('reset-password/(:any)', 'Auth::resetPassword/$1');
     // Comment submission
     $routes->post('comment/(:num)', 'News::addComment/$1');
 

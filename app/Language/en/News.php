@@ -82,6 +82,16 @@ return [
     'register_title'        => 'Register',
     'register_button'       => 'Register',
     'register_have_account' => 'Already have an account?',
+    'forgot_password_title'   => 'Forgot Password',
+    'forgot_password_link'    => 'Forgot Password?',
+    'forgot_password_button'  => 'Send Reset Link',
+    'reset_password_title'    => 'Reset Password',
+    'reset_password_button'   => 'Reset Password',
+    'confirm_password'        => 'Confirm Password',
+    'email_not_found'         => 'No account found with this email address.',
+    'reset_link_sent'         => 'If the email matches our records, a password reset link has been sent.',
+    'invalid_or_expired_token'=> 'The password reset token is invalid or has expired.',
+    'password_reset_success'  => 'Your password has been successfully reset. You can now login.',
 
     // Admin
     'admin_dashboard'       => 'Dashboard',

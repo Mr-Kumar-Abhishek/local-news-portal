@@ -556,11 +556,11 @@
                         <a href="/<?= $locale ?>/admin/dashboard" class="btn btn-outline-primary btn-sm ms-2">
                             <i class="bi bi-speedometer2"></i> <?= lang('News.dashboard') ?>
                         </a>
-                        <a href="/<?= $locale ?>/auth/logout" class="btn btn-outline-danger btn-sm ms-1">
+                        <a href="/<?= $locale ?>/logout" class="btn btn-outline-danger btn-sm ms-1">
                             <i class="bi bi-box-arrow-right"></i>
                         </a>
                     <?php else: ?>
-                        <a href="/<?= $locale ?>/auth/login" class="btn btn-outline-primary btn-sm ms-2">
+                        <a href="/<?= $locale ?>/login" class="btn btn-outline-primary btn-sm ms-2">
                             <i class="bi bi-person"></i> <?= lang('News.login') ?>
                         </a>
                     <?php endif; ?>
