@@ -17,7 +17,7 @@ class News extends BaseController
             'locale'     => $this->locale,
             'title'      => 'News Management',
             'articles'   => $articleModel->getAllWithDetails(),
-            'categories' => $categoryModel->getActiveCategories(),
+            'categories' => $categoryModel->asArray()->getActiveCategories(),
             'user_name'  => $this->getCurrentUserName(),
         ];
 
@@ -34,7 +34,7 @@ class News extends BaseController
         $data = [
             'locale'     => $this->locale,
             'title'      => 'Create News',
-            'categories' => $categoryModel->getParentCategories(),
+            'categories' => $categoryModel->asArray()->getParentCategories(),
             'all_tags'   => $tagModel->findAll(),
             'user_name'  => $this->getCurrentUserName(),
         ];
@@ -58,6 +58,8 @@ class News extends BaseController
             $slug = $this->request->getPost('slug');
             $slug = url_title($slug, '-', true);
 
+            $status = $this->request->getPost('save_type') === 'publish' ? 'published' : 'draft';
+
             $articleId = $articleModel->insert([
                 'title_en'       => $this->request->getPost('title_en'),
                 'title_hi'       => $this->request->getPost('title_hi'),
@@ -71,8 +73,8 @@ class News extends BaseController
                 'author_id'      => $this->getCurrentUserId(),
                 'language'       => $this->request->getPost('language') ?? 'both',
                 'news_section'   => $this->request->getPost('news_section') ?? 'local',
-                'status'         => $this->request->getPost('status') ?? 'draft',
-                'published_at'   => $this->request->getPost('status') === 'published' ? date('Y-m-d H:i:s') : null,
+                'status'         => $status,
+                'published_at'   => $status === 'published' ? date('Y-m-d H:i:s') : null,
                 'featured'       => $this->request->getPost('featured') ? 1 : 0,
             ]);
 
@@ -110,7 +112,7 @@ class News extends BaseController
             'locale'         => $this->locale,
             'title'          => 'Edit News',
             'article'        => $article,
-            'categories'     => $categoryModel->getParentCategories(),
+            'categories'     => $categoryModel->asArray()->getParentCategories(),
             'all_tags'       => $tagModel->findAll(),
             'article_tag_ids' => $articleTagIds,
             'user_name'      => $this->getCurrentUserName(),
@@ -132,6 +134,8 @@ class News extends BaseController
             $slug = $this->request->getPost('slug') ?? $article->slug;
             $slug = url_title($slug, '-', true);
 
+            $status = $this->request->getPost('save_type') === 'publish' ? 'published' : 'draft';
+
             $articleModel->update($id, [
                 'title_en'       => $this->request->getPost('title_en'),
                 'title_hi'       => $this->request->getPost('title_hi'),
@@ -144,8 +148,8 @@ class News extends BaseController
                 'category_id'    => $this->request->getPost('category_id'),
                 'language'       => $this->request->getPost('language') ?? 'both',
                 'news_section'   => $this->request->getPost('news_section') ?? 'local',
-                'status'         => $this->request->getPost('status') ?? 'draft',
-                'published_at'   => $this->request->getPost('status') === 'published' && !$article->published_at ? date('Y-m-d H:i:s') : $article->published_at,
+                'status'         => $status,
+                'published_at'   => $status === 'published' && !$article->published_at ? date('Y-m-d H:i:s') : $article->published_at,
                 'featured'       => $this->request->getPost('featured') ? 1 : 0,
             ]);
 

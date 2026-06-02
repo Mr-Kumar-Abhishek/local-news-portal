@@ -158,6 +158,7 @@
     </div>
 </form>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-generate slug from English title
@@ -187,8 +188,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Simple textarea enhancement (basic)
-    const textareas = document.querySelectorAll('textarea[id^="content_"]');
-    // In a production environment, consider integrating a WYSIWYG editor like TinyMCE or CKEditor
+    // Initialize CKEditor for English content
+    if (document.querySelector('#content_en')) {
+        ClassicEditor
+            .create(document.querySelector('#content_en'))
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+    // Initialize CKEditor for Hindi content
+    if (document.querySelector('#content_hi')) {
+        ClassicEditor
+            .create(document.querySelector('#content_hi'))
+            .catch(error => {
+                console.error(error);
+            });
+    }
 });
 </script>

@@ -219,7 +219,7 @@ class ArticleModel extends Model
         $builder->join('users', 'users.id = articles.author_id', 'left');
         $builder->orderBy('articles.created_at', 'DESC');
 
-        return $builder->get()->getResult();
+        return $builder->get()->getResultArray();
     }
 
     public function searchArticles(string $query, int $limit = 20): array

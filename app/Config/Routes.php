@@ -75,9 +75,9 @@ $routes->group('{locale}', static function ($routes) {
         // News CRUD
         $routes->get('news', 'Admin\News::index');
         $routes->get('news/create', 'Admin\News::create');
-        $routes->post('news/create', 'Admin\News::save');
+        $routes->post('news/create', 'Admin\News::create');
         $routes->get('news/edit/(:num)', 'Admin\News::edit/$1');
-        $routes->post('news/edit/(:num)', 'Admin\News::update/$1');
+        $routes->post('news/edit/(:num)', 'Admin\News::edit/$1');
         $routes->post('news/delete/(:num)', 'Admin\News::delete/$1');
 
         // Categories CRUD
