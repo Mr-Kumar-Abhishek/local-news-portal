@@ -1,28 +1,27 @@
 <div class="container py-4">
+    <?php if (isset($breadcrumbs)): ?>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <?= breadcrumb($breadcrumbs) ?>
+        </ol>
+    </nav>
+    <?php endif; ?>
+
     <div class="row">
         <div class="col-md-8">
             <article class="article-content">
                 <?php if (isset($article)): ?>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/<?= $locale ?>"><?= lang('News.home') ?></a></li>
-                        <li class="breadcrumb-item"><a href="/<?= $locale ?>/news"><?= lang('News.all_news') ?></a></li>
-                        <?php if ($article->category_name): ?>
-                        <li class="breadcrumb-item">
-                            <a href="/<?= $locale ?>/category/<?= $article->category_slug ?>">
-                                <?= $locale === 'hi' ? esc($article->category_name_hi) : esc($article->category_name) ?>
-                            </a>
-                        </li>
-                        <?php endif; ?>
-                        <li class="breadcrumb-item active"><?= esc($locale === 'hi' ? $article->title_hi : $article->title_en) ?></li>
-                    </ol>
-                </nav>
 
                 <h1><?= esc($locale === 'hi' ? $article->title_hi : $article->title_en) ?></h1>
                 
                 <div class="meta mb-4">
                     <span class="me-3">
-                        <i class="bi bi-person"></i> <?= esc($article->author_name ?? lang('News.anonymous')) ?>
+                        <i class="bi bi-person"></i>
+                        <?php if (isset($article->author_name)): ?>
+                        <a href="/<?= $locale ?>/author/<?= esc($article->author_name) ?>"><?= esc($article->author_name) ?></a>
+                        <?php else: ?>
+                        <?= esc(lang('News.anonymous')) ?>
+                        <?php endif; ?>
                     </span>
                     <span class="me-3">
                         <i class="bi bi-clock"></i> <?= date('d M Y, H:i', strtotime($article->published_at ?? $article->created_at)) ?>
@@ -74,7 +73,7 @@
             <!-- Related Articles -->
             <?php if (isset($related) && !empty($related)): ?>
             <div class="mt-5">
-                <h4 class="section-title"><?= lang('News.related_news') ?></h4>
+                <h4 class="section-title"><?= lang('News.related_articles') ?></h4>
                 <div class="row g-3">
                     <?php foreach ($related as $rel): ?>
                     <div class="col-md-6">

@@ -35,14 +35,18 @@ class Search extends BaseController
         }
 
         $data = [
-            'query'      => $query,
-            'articles'   => $articles,
-            'total'      => $total,
-            'categories' => $this->categoryModel->getActiveCategories(),
-            'tags'       => $this->tagModel->getPopularTags(10),
-            'popular'    => $this->articleModel->getPopularArticles(5),
-            'locale'     => $this->locale,
-            'title'      => lang('News.search_results') . ': ' . esc($query),
+            'query'       => $query,
+            'articles'    => $articles,
+            'total'       => $total,
+            'categories'  => $this->categoryModel->getActiveCategories(),
+            'tags'        => $this->tagModel->getPopularTags(10),
+            'popular'     => $this->articleModel->getPopularArticles(5),
+            'locale'      => $this->locale,
+            'title'       => lang('News.search_results') . ': ' . esc($query),
+            'breadcrumbs' => [
+                ['label' => lang('News.nav_home'), 'url' => '/' . $this->locale],
+                ['label' => lang('News.search_results'), 'url' => null],
+            ],
         ];
 
         return view('templates/header', $data)

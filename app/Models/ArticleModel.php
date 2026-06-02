@@ -17,6 +17,7 @@ class ArticleModel extends Model
         'excerpt_en', 'excerpt_hi', 'featured_image', 'category_id',
         'author_id', 'language', 'news_section', 'status',
         'published_at', 'featured', 'view_count',
+        'is_featured', 'is_breaking', 'allow_comments', 'editor_id',
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -149,7 +150,30 @@ class ArticleModel extends Model
 
     public function getFeaturedArticles(int $limit = 5): array
     {
-        return $this->getPublished(['featured' => 1], $limit);
+        $builder = $this->db->table('articles');
+        $builder->select('articles.*, categories.name_en as category_name, categories.name_hi as category_name_hi, categories.slug as category_slug, users.full_name as author_name');
+        $builder->join('categories', 'categories.id = articles.category_id', 'left');
+        $builder->join('users', 'users.id = articles.author_id', 'left');
+        $builder->where('articles.status', 'published');
+        $builder->where('articles.is_featured', 1);
+        $builder->orderBy('articles.published_at', 'DESC');
+        $builder->limit($limit);
+
+        return $builder->get()->getResult();
+    }
+
+    public function getBreakingNews(int $limit = 3): array
+    {
+        $builder = $this->db->table('articles');
+        $builder->select('articles.*, categories.name_en as category_name, categories.name_hi as category_name_hi, categories.slug as category_slug, users.full_name as author_name');
+        $builder->join('categories', 'categories.id = articles.category_id', 'left');
+        $builder->join('users', 'users.id = articles.author_id', 'left');
+        $builder->where('articles.status', 'published');
+        $builder->where('articles.is_breaking', 1);
+        $builder->orderBy('articles.published_at', 'DESC');
+        $builder->limit($limit);
+
+        return $builder->get()->getResult();
     }
 
     public function getLatestArticles(int $limit = 10): array
@@ -181,6 +205,7 @@ class ArticleModel extends Model
         $builder->select('articles.*, categories.name_en as category_name, categories.name_hi as category_name_hi, categories.slug as category_slug');
         $builder->join('categories', 'categories.id = articles.category_id', 'left');
         $builder->where('articles.status', 'published');
+        $builder->where('articles.allow_comments', 1);
         $builder->orderBy('articles.view_count', 'DESC');
         $builder->limit($limit);
 
@@ -227,6 +252,35 @@ class ArticleModel extends Model
         return $this->getPublished(['search' => $query], $limit);
     }
 
+    public function getPendingArticles(int $limit = 20): array
+    {
+        $builder = $this->db->table('articles');
+        $builder->select('articles.*, categories.name_en as category_name, categories.name_hi as category_name_hi, users.full_name as author_name');
+        $builder->join('categories', 'categories.id = articles.category_id', 'left');
+        $builder->join('users', 'users.id = articles.author_id', 'left');
+        $builder->where('articles.status', 'pending');
+        $builder->orderBy('articles.created_at', 'ASC');
+        $builder->limit($limit);
+
+        return $builder->get()->getResult();
+    }
+
+    public function approveArticle(int $id, int $editorId): bool
+    {
+        return (bool) $this->update($id, [
+            'status'    => 'approved',
+            'editor_id' => $editorId,
+        ]);
+    }
+
+    public function publishArticle(int $id): bool
+    {
+        return (bool) $this->update($id, [
+            'status'       => 'published',
+            'published_at' => date('Y-m-d H:i:s'),
+        ]);
+    }
+
     public function getMonthlyArticleCounts(): array
     {
         $builder = $this->db->table('articles');
@@ -237,5 +291,40 @@ class ArticleModel extends Model
         $builder->limit(12);
 
         return $builder->get()->getResult();
+    }
+
+    public function getArticlesByTag(int $tagId, int $perPage = 12, int $offset = 0): array
+    {
+        $builder = $this->db->table('articles');
+        $builder->select('articles.*, categories.name_en as category_name, categories.name_hi as category_name_hi, categories.slug as category_slug, users.full_name as author_name');
+        $builder->join('categories', 'categories.id = articles.category_id', 'left');
+        $builder->join('users', 'users.id = articles.author_id', 'left');
+        $builder->join('article_tags', 'article_tags.article_id = articles.id');
+        $builder->where('article_tags.tag_id', $tagId);
+        $builder->where('articles.status', 'published');
+        $builder->orderBy('articles.published_at', 'DESC');
+        $builder->limit($perPage, $offset);
+
+        return $builder->get()->getResult();
+    }
+
+    public function countArticlesByTag(int $tagId): int
+    {
+        $builder = $this->db->table('articles');
+        $builder->join('article_tags', 'article_tags.article_id = articles.id');
+        $builder->where('article_tags.tag_id', $tagId);
+        $builder->where('articles.status', 'published');
+
+        return $builder->countAllResults();
+    }
+
+    public function getArticlesByAuthor(int $userId, int $perPage = 12, int $offset = 0): array
+    {
+        return $this->getPublished(['author_id' => $userId], $perPage, $offset);
+    }
+
+    public function countArticlesByAuthor(int $userId): int
+    {
+        return $this->countPublished(['author_id' => $userId]);
     }
 }

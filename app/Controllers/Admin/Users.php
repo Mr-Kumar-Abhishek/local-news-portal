@@ -22,6 +22,49 @@ class Users extends BaseController
              . view('admin/templates/footer');
     }
 
+    public function create(): string
+    {
+        $data = [
+            'locale'    => $this->locale,
+            'title'     => 'Create User',
+            'user_name' => $this->getCurrentUserName(),
+        ];
+
+        return view('admin/templates/header', $data)
+             . view('admin/users/create', $data)
+             . view('admin/templates/footer');
+    }
+
+    public function save(): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $userModel = new UserModel();
+
+        $rules = [
+            'username'     => 'required|alpha_numeric|min_length[3]|max_length[50]|is_unique[users.username]',
+            'email'        => 'required|valid_email|max_length[100]|is_unique[users.email]',
+            'password'     => 'required|min_length[6]',
+            'pass_confirm' => 'required|matches[password]',
+            'full_name'    => 'permit_empty|max_length[100]',
+            'role'         => 'required|in_list[user,editor,admin]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $userModel->insert([
+            'username'  => $this->request->getPost('username'),
+            'email'     => $this->request->getPost('email'),
+            'password'  => $this->request->getPost('password'),
+            'full_name' => $this->request->getPost('full_name'),
+            'role'      => $this->request->getPost('role'),
+            'status'    => $this->request->getPost('status') ?? 'active',
+        ]);
+
+        return redirect()->to('/' . $this->locale . '/admin/users')
+                       ->with('message', 'User created successfully');
+    }
+
     public function edit(int $id): string|\CodeIgniter\HTTP\RedirectResponse
     {
         $userModel = new UserModel();

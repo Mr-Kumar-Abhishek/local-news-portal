@@ -1,8 +1,3 @@
-<?= $this->extend('admin/templates/header') ?>
-
-<?= $this->section('title') ?>Media Library - Hind Bihar<?= $this->endSection() ?>
-
-<?= $this->section('content') ?>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Media Library</h1>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
@@ -139,4 +134,3 @@ function copyUrl(url) {
     });
 }
 </script>
-<?= $this->endSection() ?>

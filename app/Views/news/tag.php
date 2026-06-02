@@ -9,7 +9,14 @@
 
     <div class="row">
         <div class="col-md-8">
-            <h4 class="section-title"><?= esc($section_name ?? lang('News.all_news')) ?></h4>
+            <?php if (isset($tag)): ?>
+            <h4 class="section-title">
+                <?= lang('News.tags') ?>: <?= esc($tag_name ?? '') ?>
+                <small class="text-muted d-block fs-6 fw-normal">
+                    <?= $total ?? 0 ?> <?= lang('News.results') ?>
+                </small>
+            </h4>
+            <?php endif; ?>
 
             <?php if (isset($articles) && !empty($articles)): ?>
                 <div class="row g-4">
@@ -24,6 +31,9 @@
                             </div>
                             <?php endif; ?>
                             <div class="card-body">
+                                <span class="badge bg-primary category-badge">
+                                    <?= esc($locale === 'hi' ? ($article->category_name_hi ?? 'समाचार') : ($article->category_name ?? 'News')) ?>
+                                </span>
                                 <h5 class="card-title">
                                     <a href="/<?= $locale ?>/news/<?= $article->slug ?>">
                                         <?= esc($locale === 'hi' ? $article->title_hi : $article->title_en) ?>
@@ -34,6 +44,9 @@
                                 </p>
                                 <small class="text-muted">
                                     <i class="bi bi-clock"></i> <?= date('d M Y', strtotime($article->published_at ?? $article->created_at)) ?>
+                                    <?php if ($article->author_name): ?>
+                                    | <i class="bi bi-person"></i> <?= esc($article->author_name) ?>
+                                    <?php endif; ?>
                                 </small>
                             </div>
                         </div>
@@ -54,8 +67,9 @@
                 <?php endif; ?>
             <?php else: ?>
                 <div class="text-center py-5">
-                    <i class="bi bi-newspaper" style="font-size: 3rem; color: #ccc;"></i>
-                    <h5 class="mt-3 text-muted"><?= lang('News.no_news') ?></h5>
+                    <i class="bi bi-tag" style="font-size: 3rem; color: #ccc;"></i>
+                    <h5 class="mt-3 text-muted"><?= lang('News.no_results') ?></h5>
+                    <p class="text-muted">No articles found for this tag.</p>
                 </div>
             <?php endif; ?>
         </div>

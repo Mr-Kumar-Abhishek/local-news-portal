@@ -1,8 +1,3 @@
-<?= $this->extend('admin/templates/header') ?>
-
-<?= $this->section('title') ?>Create Category - Hind Bihar<?= $this->endSection() ?>
-
-<?= $this->section('content') ?>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Create Category</h1>
     <a href="<?= site_url($locale . '/admin/categories') ?>" class="btn btn-outline-secondary">
@@ -113,4 +108,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-<?= $this->endSection() ?>

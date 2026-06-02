@@ -1,8 +1,3 @@
-<?= $this->extend('admin/templates/header') ?>
-
-<?= $this->section('title') ?>Edit Article - Hind Bihar<?= $this->endSection() ?>
-
-<?= $this->section('content') ?>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Edit Article</h1>
     <div>
@@ -19,4 +14,3 @@
 
 <?= view('App\Views\admin\news\_form', ['action' => site_url($locale . '/admin/news/edit/' . $article['id']), 'article' => $article]) ?>
 
-<?= $this->endSection() ?>

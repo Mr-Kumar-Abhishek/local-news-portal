@@ -1,8 +1,3 @@
-<?= $this->extend('admin/templates/header') ?>
-
-<?= $this->section('title') ?>Manage Tags - Hind Bihar<?= $this->endSection() ?>
-
-<?= $this->section('content') ?>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Manage Tags</h1>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTagModal">
@@ -111,4 +106,3 @@ function editTag(id) {
     window.location.href = '<?= site_url($locale . '/admin/tags') ?>?edit=' + id;
 }
 </script>
-<?= $this->endSection() ?>

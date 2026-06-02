@@ -95,4 +95,11 @@ class UserModel extends Model
                     ->limit($limit)
                     ->findAll();
     }
+
+    public function getUserByUsername(string $username): ?object
+    {
+        return $this->where('username', $username)
+                    ->where('status', 1)
+                    ->first();
+    }
 }

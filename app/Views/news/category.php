@@ -1,4 +1,12 @@
 <div class="container py-4">
+    <?php if (isset($breadcrumbs)): ?>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <?= breadcrumb($breadcrumbs) ?>
+        </ol>
+    </nav>
+    <?php endif; ?>
+
     <div class="row">
         <div class="col-md-8">
             <?php if (isset($category)): ?>

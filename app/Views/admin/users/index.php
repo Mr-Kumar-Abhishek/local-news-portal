@@ -1,8 +1,3 @@
-<?= $this->extend('admin/templates/header') ?>
-
-<?= $this->section('title') ?>Manage Users - Hind Bihar<?= $this->endSection() ?>
-
-<?= $this->section('content') ?>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Manage Users</h1>
     <a href="<?= site_url($locale . '/admin/users/create') ?>" class="btn btn-primary">
@@ -115,4 +110,3 @@ function confirmDelete(id) {
     }
 }
 </script>
-<?= $this->endSection() ?>

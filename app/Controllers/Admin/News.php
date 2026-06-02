@@ -58,7 +58,19 @@ class News extends BaseController
             $slug = $this->request->getPost('slug');
             $slug = url_title($slug, '-', true);
 
-            $status = $this->request->getPost('save_type') === 'publish' ? 'published' : 'draft';
+            $userRole = $this->getCurrentUserRole();
+            $saveType = $this->request->getPost('save_type');
+
+            if ($saveType === 'publish') {
+                $status = ($userRole === 'admin') ? 'published' : 'pending';
+            } else {
+                $status = 'draft';
+            }
+
+            // Checkbox fields default to 0 if not present in POST
+            $isFeatured    = $this->request->getPost('is_featured') ? 1 : 0;
+            $isBreaking    = $this->request->getPost('is_breaking') ? 1 : 0;
+            $allowComments = $this->request->getPost('allow_comments') ? 1 : 0;
 
             $articleId = $articleModel->insert([
                 'title_en'       => $this->request->getPost('title_en'),
@@ -76,6 +88,9 @@ class News extends BaseController
                 'status'         => $status,
                 'published_at'   => $status === 'published' ? date('Y-m-d H:i:s') : null,
                 'featured'       => $this->request->getPost('featured') ? 1 : 0,
+                'is_featured'    => $isFeatured,
+                'is_breaking'    => $isBreaking,
+                'allow_comments' => $allowComments,
             ]);
 
             if ($articleId) {
@@ -134,7 +149,19 @@ class News extends BaseController
             $slug = $this->request->getPost('slug') ?? $article->slug;
             $slug = url_title($slug, '-', true);
 
-            $status = $this->request->getPost('save_type') === 'publish' ? 'published' : 'draft';
+            $userRole = $this->getCurrentUserRole();
+            $saveType = $this->request->getPost('save_type');
+
+            if ($saveType === 'publish') {
+                $status = ($userRole === 'admin') ? 'published' : 'pending';
+            } else {
+                $status = 'draft';
+            }
+
+            // Checkbox fields default to 0 if not present in POST
+            $isFeatured    = $this->request->getPost('is_featured') ? 1 : 0;
+            $isBreaking    = $this->request->getPost('is_breaking') ? 1 : 0;
+            $allowComments = $this->request->getPost('allow_comments') ? 1 : 0;
 
             $articleModel->update($id, [
                 'title_en'       => $this->request->getPost('title_en'),
@@ -151,6 +178,9 @@ class News extends BaseController
                 'status'         => $status,
                 'published_at'   => $status === 'published' && !$article->published_at ? date('Y-m-d H:i:s') : $article->published_at,
                 'featured'       => $this->request->getPost('featured') ? 1 : 0,
+                'is_featured'    => $isFeatured,
+                'is_breaking'    => $isBreaking,
+                'allow_comments' => $allowComments,
             ]);
 
             // Sync tags
@@ -173,5 +203,41 @@ class News extends BaseController
 
         return redirect()->to('/' . $this->locale . '/admin/news')
                        ->with('message', 'Article deleted successfully');
+    }
+
+    public function pending(): string
+    {
+        $articleModel = new ArticleModel();
+
+        $data = [
+            'locale'    => $this->locale,
+            'title'     => 'Pending Review',
+            'articles'  => $articleModel->getPendingArticles(),
+            'user_name' => $this->getCurrentUserName(),
+        ];
+
+        return view('admin/templates/header', $data)
+             . view('admin/news/index', $data)
+             . view('admin/templates/footer');
+    }
+
+    public function approve(int $id): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $articleModel = new ArticleModel();
+
+        $articleModel->approveArticle($id, (int) $this->getCurrentUserId());
+
+        return redirect()->to('/' . $this->locale . '/admin/news')
+                       ->with('message', 'Article approved successfully');
+    }
+
+    public function publish(int $id): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $articleModel = new ArticleModel();
+
+        $articleModel->publishArticle($id);
+
+        return redirect()->to('/' . $this->locale . '/admin/news')
+                       ->with('message', 'Article published successfully');
     }
 }

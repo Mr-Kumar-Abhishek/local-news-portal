@@ -1,8 +1,3 @@
-<?= $this->extend('admin/templates/header') ?>
-
-<?= $this->section('title') ?>Manage News - Hind Bihar<?= $this->endSection() ?>
-
-<?= $this->section('content') ?>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Manage News</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
@@ -24,6 +19,8 @@
                 <select name="status" class="form-select">
                     <option value="">All Status</option>
                     <option value="published" <?= ($status ?? '') === 'published' ? 'selected' : '' ?>>Published</option>
+                    <option value="pending" <?= ($status ?? '') === 'pending' ? 'selected' : '' ?>>Pending</option>
+                    <option value="approved" <?= ($status ?? '') === 'approved' ? 'selected' : '' ?>>Approved</option>
                     <option value="draft" <?= ($status ?? '') === 'draft' ? 'selected' : '' ?>>Draft</option>
                     <option value="archived" <?= ($status ?? '') === 'archived' ? 'selected' : '' ?>>Archived</option>
                 </select>
@@ -108,10 +105,16 @@
                             <td>
                                 <?php if ($article['status'] === 'published') : ?>
                                     <span class="badge bg-success">Published</span>
+                                <?php elseif ($article['status'] === 'pending') : ?>
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                <?php elseif ($article['status'] === 'approved') : ?>
+                                    <span class="badge bg-info text-dark">Approved</span>
                                 <?php elseif ($article['status'] === 'draft') : ?>
                                     <span class="badge bg-secondary">Draft</span>
+                                <?php elseif ($article['status'] === 'archived') : ?>
+                                    <span class="badge bg-dark">Archived</span>
                                 <?php else : ?>
-                                    <span class="badge bg-warning text-dark">Archived</span>
+                                    <span class="badge bg-light text-dark"><?= esc($article['status']) ?></span>
                                 <?php endif; ?>
                             </td>
                             <td><?= esc(number_format($article['view_count'] ?? 0)) ?></td>
@@ -127,6 +130,18 @@
                                        class="btn btn-outline-primary" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
+                                    <?php if ($article['status'] === 'pending') : ?>
+                                        <a href="<?= site_url($locale . '/admin/news/approve/' . $article['id']) ?>"
+                                           class="btn btn-outline-info" title="Approve">
+                                            <i class="bi bi-check-lg"></i>
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if ($article['status'] === 'approved') : ?>
+                                        <a href="<?= site_url($locale . '/admin/news/publish/' . $article['id']) ?>"
+                                           class="btn btn-outline-success" title="Publish">
+                                            <i class="bi bi-cloud-upload"></i>
+                                        </a>
+                                    <?php endif; ?>
                                     <button type="button" class="btn btn-outline-danger" title="Delete"
                                             onclick="confirmDelete(<?= $article['id'] ?>)">
                                         <i class="bi bi-trash"></i>
@@ -169,4 +184,3 @@ function confirmDelete(id) {
     }
 }
 </script>
-<?= $this->endSection() ?>

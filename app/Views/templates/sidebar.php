@@ -1,5 +1,27 @@
 <!-- Sidebar -->
 <aside class="col-md-4">
+    <!-- Sections -->
+    <div class="sidebar-widget">
+        <h5 class="widget-title"><i class="bi bi-grid me-2 text-primary"></i><?= lang('News.section') ?></h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a href="/<?= $locale ?>/section/international">
+                    <i class="bi bi-globe me-2"></i><?= lang('News.section_international') ?>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="/<?= $locale ?>/section/national">
+                    <i class="bi bi-flag me-2"></i><?= lang('News.section_national') ?>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="/<?= $locale ?>/section/local">
+                    <i class="bi bi-geo-alt me-2"></i><?= lang('News.section_local') ?>
+                </a>
+            </li>
+        </ul>
+    </div>
+
     <!-- Popular Posts -->
     <?php if (isset($popular) && !empty($popular)): ?>
     <div class="sidebar-widget">

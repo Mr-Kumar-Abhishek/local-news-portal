@@ -41,6 +41,10 @@ $routes->group('{locale}', static function ($routes) {
     $routes->get('tag/(:any)', 'News::tag/$1');
     $routes->get('tag/(:any)/page/(:num)', 'News::tag/$1/$2');
 
+    // Author profile pages
+    $routes->get('author/(:any)', 'News::author/$1');
+    $routes->get('author/(:any)/page/(:num)', 'News::author/$1/$2');
+
     // Search
     $routes->get('search', 'Search::index');
     $routes->get('search/autocomplete', 'Search::autocomplete');
@@ -56,7 +60,7 @@ $routes->group('{locale}', static function ($routes) {
     $routes->post('reset-password/(:any)', 'Auth::resetPassword/$1');
     $routes->get('verify-email/(:any)', 'Auth::verifyEmail/$1');
     // Comment submission
-    $routes->post('comment/(:num)', 'News::addComment/$1');
+    $routes->post('comment/(:num)', 'News::comment/$1');
 
     // SEO - RSS Feeds
     $routes->get('rss', 'Rss::index');
@@ -79,19 +83,22 @@ $routes->group('{locale}', static function ($routes) {
         $routes->get('news/edit/(:num)', 'Admin\News::edit/$1');
         $routes->post('news/edit/(:num)', 'Admin\News::edit/$1');
         $routes->post('news/delete/(:num)', 'Admin\News::delete/$1');
+        $routes->get('news/pending', 'Admin\News::pending');
+        $routes->get('news/approve/(:num)', 'Admin\News::approve/$1');
+        $routes->get('news/publish/(:num)', 'Admin\News::publish/$1');
 
         // Categories CRUD
         $routes->get('categories', 'Admin\Categories::index');
         $routes->get('categories/create', 'Admin\Categories::create');
-        $routes->post('categories/create', 'Admin\Categories::save');
+        $routes->post('categories/create', 'Admin\Categories::create');
         $routes->get('categories/edit/(:num)', 'Admin\Categories::edit/$1');
-        $routes->post('categories/edit/(:num)', 'Admin\Categories::update/$1');
+        $routes->post('categories/edit/(:num)', 'Admin\Categories::edit/$1');
         $routes->post('categories/delete/(:num)', 'Admin\Categories::delete/$1');
 
         // Tags CRUD
         $routes->get('tags', 'Admin\Tags::index');
         $routes->post('tags/create', 'Admin\Tags::create');
-        $routes->post('tags/edit/(:num)', 'Admin\Tags::update/$1');
+        $routes->post('tags/edit/(:num)', 'Admin\Tags::edit/$1');
         $routes->post('tags/delete/(:num)', 'Admin\Tags::delete/$1');
 
         // Comments Moderation
@@ -107,14 +114,14 @@ $routes->group('{locale}', static function ($routes) {
 
         // Settings
         $routes->get('settings', 'Admin\Settings::index');
-        $routes->post('settings', 'Admin\Settings::save');
+        $routes->post('settings', 'Admin\Settings::index');
 
         // Users Management
         $routes->get('users', 'Admin\Users::index');
         $routes->get('users/create', 'Admin\Users::create');
         $routes->post('users/create', 'Admin\Users::save');
         $routes->get('users/edit/(:num)', 'Admin\Users::edit/$1');
-        $routes->post('users/edit/(:num)', 'Admin\Users::update/$1');
+        $routes->post('users/edit/(:num)', 'Admin\Users::edit/$1');
         $routes->post('users/delete/(:num)', 'Admin\Users::delete/$1');
     });
 });

@@ -6,6 +6,7 @@ use App\Models\ArticleModel;
 use App\Models\CategoryModel;
 use App\Models\TagModel;
 use App\Models\CommentModel;
+use App\Models\UserModel;
 
 class News extends BaseController
 {
@@ -13,6 +14,7 @@ class News extends BaseController
     protected CategoryModel $categoryModel;
     protected TagModel $tagModel;
     protected CommentModel $commentModel;
+    protected UserModel $userModel;
 
     protected int $perPage = 10;
 
@@ -22,6 +24,7 @@ class News extends BaseController
         $this->categoryModel = new CategoryModel();
         $this->tagModel      = new TagModel();
         $this->commentModel  = new CommentModel();
+        $this->userModel     = new UserModel();
     }
 
     public function index(): string
@@ -47,6 +50,10 @@ class News extends BaseController
             'popular'       => $this->articleModel->getPopularArticles(5),
             'locale'        => $this->locale,
             'title'         => lang('News.all_news'),
+            'breadcrumbs'   => [
+                ['label' => lang('News.nav_home'), 'url' => '/' . $this->locale],
+                ['label' => lang('News.all_news'), 'url' => null],
+            ],
         ];
 
         return view('templates/header', $data)
@@ -70,17 +77,34 @@ class News extends BaseController
         $comments = $this->commentModel->getApprovedComments($article->id);
         $related  = $this->articleModel->getRelatedArticles($article->id, $article->category_id, 4);
 
+        $articleTitle = $this->locale === 'hi' ? $article->title_hi : $article->title_en;
+
+        $breadcrumbs = [
+            ['label' => lang('News.nav_home'), 'url' => '/' . $this->locale],
+            ['label' => lang('News.all_news'), 'url' => '/' . $this->locale . '/news'],
+        ];
+
+        if ($article->category_name) {
+            $breadcrumbs[] = [
+                'label' => $this->locale === 'hi' ? $article->category_name_hi : $article->category_name,
+                'url'   => '/' . $this->locale . '/category/' . $article->category_slug,
+            ];
+        }
+
+        $breadcrumbs[] = ['label' => $articleTitle, 'url' => null];
+
         $data = [
-            'article'   => $article,
-            'tags'      => $tags,
-            'comments'  => $comments,
-            'related'   => $related,
-            'categories' => $this->categoryModel->getActiveCategories(),
+            'article'     => $article,
+            'tags'        => $tags,
+            'comments'    => $comments,
+            'related'     => $related,
+            'categories'  => $this->categoryModel->getActiveCategories(),
             'tags_sidebar' => $this->tagModel->getPopularTags(10),
-            'popular'   => $this->articleModel->getPopularArticles(5),
-            'locale'    => $this->locale,
-            'title'     => $this->locale === 'hi' ? $article->title_hi : $article->title_en,
+            'popular'     => $this->articleModel->getPopularArticles(5),
+            'locale'      => $this->locale,
+            'title'       => $articleTitle,
             'meta_description' => $this->locale === 'hi' ? $article->excerpt_hi : $article->excerpt_en,
+            'breadcrumbs' => $breadcrumbs,
         ];
 
         return view('templates/header', $data)
@@ -104,6 +128,8 @@ class News extends BaseController
         $articles = $this->articleModel->getPublished($filters, $this->perPage, $offset);
         $total    = $this->articleModel->countPublished($filters);
 
+        $categoryName = $this->locale === 'hi' ? $category->name_hi : $category->name_en;
+
         $data = [
             'category'      => $category,
             'articles'      => $articles,
@@ -114,7 +140,11 @@ class News extends BaseController
             'tags'          => $this->tagModel->getPopularTags(10),
             'popular'       => $this->articleModel->getPopularArticles(5),
             'locale'        => $this->locale,
-            'title'         => $this->locale === 'hi' ? $category->name_hi : $category->name_en,
+            'title'         => $categoryName,
+            'breadcrumbs'   => [
+                ['label' => lang('News.nav_home'), 'url' => '/' . $this->locale],
+                ['label' => $categoryName, 'url' => null],
+            ],
         ];
 
         return view('templates/header', $data)
@@ -142,9 +172,11 @@ class News extends BaseController
             'local'         => ['en' => 'Local', 'hi' => 'स्थानीय'],
         ];
 
+        $sectionName = $sectionNames[$section][$this->locale];
+
         $data = [
             'section'       => $section,
-            'section_name'  => $sectionNames[$section][$this->locale],
+            'section_name'  => $sectionName,
             'articles'      => $articles,
             'pager_links'   => $this->generatePagination($total, $page),
             'total'         => $total,
@@ -153,11 +185,96 @@ class News extends BaseController
             'tags'          => $this->tagModel->getPopularTags(10),
             'popular'       => $this->articleModel->getPopularArticles(5),
             'locale'        => $this->locale,
-            'title'         => $sectionNames[$section][$this->locale],
+            'title'         => $sectionName,
+            'breadcrumbs'   => [
+                ['label' => lang('News.nav_home'), 'url' => '/' . $this->locale],
+                ['label' => $sectionName, 'url' => null],
+            ],
         ];
 
         return view('templates/header', $data)
              . view('news/section', $data)
+             . view('templates/sidebar', $data)
+             . view('templates/footer');
+    }
+
+    public function tag(string $slug): string
+    {
+        $tag = $this->tagModel->where('slug', $slug)->first();
+
+        if (!$tag) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $page   = $this->request->getGet('page') ?? 1;
+        $offset = ($page - 1) * $this->perPage;
+
+        $articles = $this->articleModel->getArticlesByTag($tag->id, $this->perPage, $offset);
+        $total    = $this->articleModel->countArticlesByTag($tag->id);
+
+        $tagName = $this->locale === 'hi' ? $tag->name_hi : $tag->name_en;
+
+        $data = [
+            'tag'           => $tag,
+            'tag_name'      => $tagName,
+            'articles'      => $articles,
+            'pager_links'   => $this->generatePagination($total, $page),
+            'total'         => $total,
+            'currentPage'   => $page,
+            'categories'    => $this->categoryModel->getActiveCategories(),
+            'tags'          => $this->tagModel->getPopularTags(10),
+            'popular'       => $this->articleModel->getPopularArticles(5),
+            'locale'        => $this->locale,
+            'title'         => lang('News.tags') . ': ' . $tagName,
+            'breadcrumbs'   => [
+                ['label' => lang('News.nav_home'), 'url' => '/' . $this->locale],
+                ['label' => lang('News.tags'), 'url' => null],
+                ['label' => $tagName, 'url' => null],
+            ],
+        ];
+
+        return view('templates/header', $data)
+             . view('news/tag', $data)
+             . view('templates/sidebar', $data)
+             . view('templates/footer');
+    }
+
+    public function author(string $username): string
+    {
+        $author = $this->userModel->getUserByUsername($username);
+
+        if (!$author) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $page   = $this->request->getGet('page') ?? 1;
+        $offset = ($page - 1) * $this->perPage;
+
+        $articles = $this->articleModel->getArticlesByAuthor($author->id, $this->perPage, $offset);
+        $total    = $this->articleModel->countArticlesByAuthor($author->id);
+
+        $displayName = $author->full_name ?: $author->username;
+
+        $data = [
+            'author'        => $author,
+            'display_name'  => $displayName,
+            'articles'      => $articles,
+            'pager_links'   => $this->generatePagination($total, $page),
+            'total'         => $total,
+            'currentPage'   => $page,
+            'categories'    => $this->categoryModel->getActiveCategories(),
+            'tags'          => $this->tagModel->getPopularTags(10),
+            'popular'       => $this->articleModel->getPopularArticles(5),
+            'locale'        => $this->locale,
+            'title'         => lang('News.by') . ' ' . $displayName,
+            'breadcrumbs'   => [
+                ['label' => lang('News.nav_home'), 'url' => '/' . $this->locale],
+                ['label' => $displayName, 'url' => null],
+            ],
+        ];
+
+        return view('templates/header', $data)
+             . view('news/author', $data)
              . view('templates/sidebar', $data)
              . view('templates/footer');
     }

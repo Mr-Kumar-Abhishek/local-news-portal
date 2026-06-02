@@ -50,7 +50,7 @@
             <div class="mb-3">
                 <label for="content_en" class="form-label">Content (English) <span class="text-danger">*</span></label>
                 <textarea name="content_en" id="content_en" rows="15"
-                          class="form-control" required
+                          class="form-control wysiwyg" required
                           placeholder="Write your article content in English"><?= old('content_en', $article['content_en'] ?? '') ?></textarea>
             </div>
         </div>
@@ -77,7 +77,7 @@
             <div class="mb-3">
                 <label for="content_hi" class="form-label">सामग्री (हिंदी) <span class="text-danger">*</span></label>
                 <textarea name="content_hi" id="content_hi" rows="15"
-                          class="form-control" required
+                          class="form-control wysiwyg" required
                           placeholder="हिंदी में अपनी लेख सामग्री लिखें"><?= old('content_hi', $article['content_hi'] ?? '') ?></textarea>
             </div>
         </div>
@@ -143,6 +143,46 @@
         </div>
     </div>
 
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0">Publishing Options</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1"
+                               <?= old('is_featured', $article['is_featured'] ?? 0) ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="is_featured">
+                            <i class="bi bi-star-fill text-warning"></i> Featured
+                        </label>
+                    </div>
+                    <small class="text-muted d-block">Show on homepage featured section</small>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="is_breaking" id="is_breaking" value="1"
+                               <?= old('is_breaking', $article['is_breaking'] ?? 0) ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="is_breaking">
+                            <i class="bi bi-exclamation-circle-fill text-danger"></i> Breaking News
+                        </label>
+                    </div>
+                    <small class="text-muted d-block">Mark as urgent breaking news</small>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="allow_comments" id="allow_comments" value="1"
+                               <?= old('allow_comments', $article['allow_comments'] ?? 1) ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="allow_comments">
+                            <i class="bi bi-chat-dots-fill text-primary"></i> Allow Comments
+                        </label>
+                    </div>
+                    <small class="text-muted d-block">Enable reader comments for this article</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="d-flex justify-content-between mb-4">
         <a href="<?= site_url($locale . '/admin/news') ?>" class="btn btn-outline-secondary">
             <i class="bi bi-x-circle"></i> Cancel
@@ -158,7 +198,7 @@
     </div>
 </form>
 
-<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-generate slug from English title
@@ -188,22 +228,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Initialize CKEditor for English content
-    if (document.querySelector('#content_en')) {
-        ClassicEditor
-            .create(document.querySelector('#content_en'))
-            .catch(error => {
-                console.error(error);
-            });
-    }
-
-    // Initialize CKEditor for Hindi content
-    if (document.querySelector('#content_hi')) {
-        ClassicEditor
-            .create(document.querySelector('#content_hi'))
-            .catch(error => {
-                console.error(error);
-            });
-    }
+    // Initialize TinyMCE on all wysiwyg textareas
+    tinymce.init({
+        selector: 'textarea.wysiwyg',
+        height: 400,
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        relative_urls: false,
+        remove_script_host: false,
+        convert_urls: true
+    });
 });
 </script>
