@@ -1,69 +1,181 @@
-# CodeIgniter 4 Application Starter
+# Hind Bihar - Bilingual Local News Portal
 
-## What is CodeIgniter?
+`Hind Bihar` is a state-of-the-art, responsive, bilingual (Hindi & English) news platform designed for local, national, and international coverage. Built using the PHP full-stack MVC framework **CodeIgniter 4**, the platform provides a complete Content Management System (CMS) for editors and journalists, and an engaging reading experience for visitors.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+---
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## 🌟 Key Features
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+- **Bilingual Content Management**: True multi-lingual publishing. Articles, categories, tags, and media descriptions support side-by-side English and Hindi metadata.
+- **Role-Based Access Control (RBAC)**: Secure access levels tailored to different team roles:
+  - 👑 **Admin**: Full system control, configurations, user management, and tag/category setup.
+  - 📝 **Editor**: Article moderation, comments management, and category/media curation.
+  - ✍️ **Journalist**: Draft creation, article editing, and media uploads.
+  - 👥 **Reader**: Personalized language preference, bookmark-ready articles, and community commenting.
+- **Advanced Comment Moderation**: Reader comments can be filtered, approved, rejected, or deleted by administrators and editors to ensure a high-quality discussion space.
+- **SEO & Syndication Suite**:
+  - Automatically generated Google-compliant XML Sitemap (`/sitemap.xml`).
+  - RSS feeds for global and category-specific streams (`/rss` and `/rss/(:category)`).
+  - Clean slug-based URLs with customizable OG metadata tags for Facebook, Twitter, and OpenGraph.
+- **Smart Search & Autocomplete**: Real-time autocomplete-assisted search capabilities to help readers discover articles quickly.
+- **High-Performance Architecture**: Uses a lightweight SQLite3 backend by default for minimal memory footprint and instant deployments, while fully compatible with MySQL/MariaDB.
+- **Security-First Focus**: Out-of-the-box CSRF protection, SQL injection prevention, strict file-upload validation, and XSS sanitization.
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+---
 
-## Installation & updates
+## 📂 Project Architecture
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+The portal leverages CodeIgniter 4's Model-View-Controller architecture:
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+```
+                        ┌─────────────────────────────┐
+                        │        Client Browser       │
+                        └──────────────┬──────────────┘
+                                       │ HTTP Request
+                                       ▼
+                        ┌─────────────────────────────┐
+                        │      App Routing Engine     │
+                        │    (app/Config/Routes.php)  │
+                        └──────────────┬──────────────┘
+                                       │
+                                       ▼
+                        ┌─────────────────────────────┐
+                        │         Controllers         │
+                        │     (app/Controllers/)      │
+                        └──────────┬───────┬──────────┘
+             Queries Data          │       │ Renders View
+          ┌────────────────────────┘       └────────────────────────┐
+          ▼                                                         ▼
+┌───────────────────┐                                     ┌───────────────────┐
+│      Models       │                                     │       Views       │
+│  (app/Models/)    │                                     │   (app/Views/)    │
+└─────────┬─────────┘                                     └───────────────────┘
+          │ Reads/Writes
+          ▼
+┌───────────────────┐
+│ SQLite3/MySQL DB  │
+└───────────────────┘
+```
 
-## Setup
+For more details on the database relationships and technical design, refer to the [Software Design Document](DESIGN.md) (`DESIGN.md`).
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+---
 
-## Important Change with index.php
+## 🛠️ Tech Stack & Requirements
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+- **PHP Version**: `^8.2`
+- **Backend Framework**: CodeIgniter `^4.7`
+- **Database**: SQLite3 (default for local setup) or MySQL/MariaDB
+- **Frontend Utilities**: Bootstrap `5.3.2`, Bootstrap Icons `1.11.2`, and Google Fonts (Noto Sans & Noto Sans Devanagari)
+- **Testing Suite**: PHPUnit `^10.5`
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+---
 
-**Please** read the user guide for a better explanation of how CI4 works!
+## 🚀 Setup & Installation Guide
 
-## Repository Management
+Follow these steps to set up the project on your local machine:
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+### 1. Prerequisites
+Ensure you have the following installed on your machine:
+- PHP 8.2 or higher
+- Composer (PHP Package Manager)
+- PHP Extensions: `intl`, `mbstring`, `sqlite3`
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+### 2. Install Dependencies
+Run Composer to download and install all necessary dependencies:
+```bash
+composer install
+```
 
-## Server Requirements
+### 3. Environment Configuration
+Copy the default environment template file to create your active `.env` file:
+```bash
+cp env .env
+```
+Open `.env` and update the database settings or Base URL if needed. By default, the database is configured to use a local SQLite3 file:
+```env
+database.default.database = writable/hind-bihar.db
+database.default.DBDriver = SQLite3
+```
 
-PHP version 8.2 or higher is required, with the following extensions installed:
+### 4. Database Initialization
+Run the database migrations to set up the tables, triggers, and constraints:
+```bash
+php spark migrate
+```
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+### 5. Seed Initial Data
+Seed the database with pre-configured categories, tags, and an administrator account:
+```bash
+php spark db:seed HindBiharSeeder
+```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
+### 6. Spin Up the Local Server
+Run CodeIgniter's built-in development server:
+```bash
+php spark serve
+```
+Your local environment is now running at **`http://localhost:8080`**!
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+---
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+## 🔐 Default Login Credentials
+
+After seeding, you can log in to the admin panel with the following credentials:
+
+- **Username**: `admin`
+- **Email**: `admin@hindbihar.com`
+- **Password**: `admin123`
+- **Role**: Administrator
+
+To access the administration area, navigate to `/en/admin` or `/hi/admin`.
+
+---
+
+## 📁 Key Directories & Layout
+
+The project structure matches standard CodeIgniter 4 guidelines with modular organization:
+
+```
+├── app/
+│   ├── Config/          # Configuration files (Routes, Database, App, etc.)
+│   ├── Controllers/     # HTTP Controllers (Auth, News, Search, RSS, Sitemap)
+│   │   └── Admin/       # Admin controllers (Dashboard, News, Categories, Users)
+│   ├── Database/        # Migrations and Seeders
+│   ├── Models/          # Database Active-Record Models (Article, Category, Tag, etc.)
+│   └── Views/           # HTML layout templates, admin pages, and news views
+│       ├── admin/       # Admin-specific templates & views
+│       ├── auth/        # Login and Register pages
+│       ├── home/        # Home landing views
+│       └── templates/   # Header, Footer, and Sidebar layouts
+├── public/              # Document root (accessible to web server)
+├── tests/               # Unit and database testing suites
+└── writable/            # Temp files, cache, session storage, and SQLite databases
+```
+
+---
+
+## 🧪 Running Tests
+
+To run the automated PHPUnit test suite, execute:
+```bash
+composer test
+```
+Or run phpunit directly:
+```bash
+vendor/bin/phpunit
+```
+
+---
+
+## 🔗 Project Documentation Links
+
+For further technical reading, please refer to the following documents in the repository:
+- **[SRS.md](SRS.md)**: Software Requirements Specification containing detailed system features, use cases, and functional specifications.
+- **[DESIGN.md](DESIGN.md)**: Software Design Document detailing the system design, Entity-Relationship diagrams, detailed table schemas, and routing schemes.
+- **[AGILE_PLAN.md](AGILE_PLAN.md)**: Agile Project Management Plan listing the project roadmap, sprint schedules, epics, and user stories.
+
+---
+
+## 📄 License
+This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LICENSE) file for details.
