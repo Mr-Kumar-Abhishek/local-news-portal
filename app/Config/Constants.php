@@ -17,6 +17,17 @@ defined('APP_NAMESPACE') || define('APP_NAMESPACE', 'App');
 
 /*
  | --------------------------------------------------------------------------
+ | Support Path
+ | --------------------------------------------------------------------------
+ |
+ | The path to the tests/_support directory. This is needed when running
+ | spark CLI commands in the testing environment, since the test bootstrap
+ | is only loaded during PHPUnit runs.
+ */
+defined('SUPPORTPATH') || define('SUPPORTPATH', ROOTPATH . 'tests/_support/');
+
+/*
+ | --------------------------------------------------------------------------
  | Composer Path
  | --------------------------------------------------------------------------
  |
