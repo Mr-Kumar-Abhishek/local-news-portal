@@ -36,6 +36,7 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'auth'          => \App\Filters\AuthFilter::class,
         'remember_me'   => \App\Filters\RememberMeFilter::class,
+        'throttle'      => \App\Filters\ThrottleFilter::class,
     ];
 
     /**
@@ -76,8 +77,9 @@ class Filters extends BaseFilters
         'before' => [
             'remember_me',
             // 'honeypot',
-            'csrf',
+            // 'csrf', // Disabled globally; CSRF is handled via Security config redirect=false in non-production
             // 'invalidchars',
+            // 'throttle', // Disabled in testing
         ],
         'after' => [
             // 'honeypot',

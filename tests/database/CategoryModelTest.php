@@ -2,21 +2,14 @@
 
 namespace Tests\Database;
 
-use CodeIgniter\Test\CIUnitTestCase;
-use CodeIgniter\Test\DatabaseTestTrait;
+use Tests\Support\DatabaseTestCase;
 use App\Models\CategoryModel;
-use App\Database\Seeds\HindBiharSeeder;
 
 /**
  * @internal
  */
-final class CategoryModelTest extends CIUnitTestCase
+final class CategoryModelTest extends DatabaseTestCase
 {
-    use DatabaseTestTrait;
-
-    protected $migrate   = true;
-    protected $namespace = null;
-    protected $seed      = HindBiharSeeder::class;
 
     public function testGetActiveCategories(): void
     {
@@ -75,7 +68,9 @@ final class CategoryModelTest extends CIUnitTestCase
         $this->assertNotEmpty($tree);
         $this->assertArrayHasKey($politics->id, $tree);
         $this->assertNotEmpty($tree[$politics->id]->children);
-        $this->assertEquals('State Politics', $tree[$politics->id]->children[0]->name_en);
+        // With shared DB state, multiple children may exist; verify our new one is present
+        $childNames = array_column($tree[$politics->id]->children, 'name_en');
+        $this->assertContains('State Politics', $childNames);
     }
 
     public function testCategoriesWithCounts(): void

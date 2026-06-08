@@ -33,6 +33,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
     <style>
         :root {
             --primary-color: #c0392b;

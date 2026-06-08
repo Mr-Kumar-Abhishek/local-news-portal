@@ -74,7 +74,7 @@ class News extends BaseController
         $this->articleModel->incrementViewCount($article->id);
 
         $tags     = $this->articleModel->getArticleTags($article->id);
-        $comments = $this->commentModel->getApprovedComments($article->id);
+        $comments = $this->commentModel->getThreadedComments($article->id);
         $related  = $this->articleModel->getRelatedArticles($article->id, $article->category_id, 4);
 
         $articleTitle = $this->locale === 'hi' ? $article->title_hi : $article->title_en;
@@ -291,14 +291,21 @@ class News extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $this->commentModel->insert([
+        $data = [
             'article_id'   => $articleId,
             'user_id'      => $this->getCurrentUserId(),
             'author_name'  => $this->request->getPost('author_name'),
             'author_email' => $this->request->getPost('author_email'),
             'body'         => $this->request->getPost('body'),
             'status'       => 'pending',
-        ]);
+        ];
+
+        $parentId = $this->request->getPost('parent_id');
+        if (!empty($parentId)) {
+            $data['parent_id'] = (int) $parentId;
+        }
+
+        $this->commentModel->insert($data);
 
         return redirect()->back()->with('message', lang('News.comment_success'));
     }

@@ -64,7 +64,8 @@ $routes->group('{locale}', static function ($routes) {
 
     // SEO - RSS Feeds
     $routes->get('rss', 'Rss::index');
-    $routes->get('rss/(:any)', 'Rss::category/$1');
+        $routes->get('rss/language/(:any)', 'Rss::language/$1');
+        $routes->get('rss/(:any)', 'Rss::category/$1');
 
     // SEO - XML Sitemap
     $routes->get('sitemap\.xml', 'Sitemap::index');

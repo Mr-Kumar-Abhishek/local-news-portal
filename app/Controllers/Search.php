@@ -21,28 +21,51 @@ class Search extends BaseController
 
     public function index(): string
     {
-        $query  = $this->request->getGet('q') ?? '';
-        $page   = $this->request->getGet('page') ?? 1;
-        $limit  = 10;
-        $offset = ($page - 1) * $limit;
+        $query    = $this->request->getGet('q') ?? '';
+        $page     = $this->request->getGet('page') ?? 1;
+        $limit    = 12;
+        $offset   = ($page - 1) * $limit;
+
+        // Advanced filters
+        $dateFrom  = $this->request->getGet('date_from') ?? '';
+        $dateTo    = $this->request->getGet('date_to') ?? '';
+        $category  = $this->request->getGet('category') ?? '';
+        $author    = $this->request->getGet('author') ?? '';
+        $language  = $this->request->getGet('language') ?? '';
 
         $articles = [];
         $total    = 0;
 
-        if (!empty(trim($query))) {
-            $articles = $this->articleModel->searchArticles(trim($query), $limit);
-            $total    = $this->articleModel->countPublished(['search' => trim($query)]);
+        if (!empty(trim($query)) || !empty($dateFrom) || !empty($dateTo) || !empty($category) || !empty($author) || !empty($language)) {
+            $filters = [
+                'search'    => trim($query),
+                'date_from' => $dateFrom,
+                'date_to'   => $dateTo,
+                'category'  => $category,
+                'author'    => $author,
+                'language'  => $language,
+            ];
+
+            $articles = $this->articleModel->searchArticles(trim($query), $filters, $limit, $offset);
+            $total    = $this->articleModel->searchArticlesCount(trim($query), $filters);
         }
 
         $data = [
             'query'       => $query,
+            'filters'     => [
+                'date_from' => $dateFrom,
+                'date_to'   => $dateTo,
+                'category'  => $category,
+                'author'    => $author,
+                'language'  => $language,
+            ],
             'articles'    => $articles,
             'total'       => $total,
             'categories'  => $this->categoryModel->getActiveCategories(),
             'tags'        => $this->tagModel->getPopularTags(10),
             'popular'     => $this->articleModel->getPopularArticles(5),
             'locale'      => $this->locale,
-            'title'       => lang('News.search_results') . ': ' . esc($query),
+            'title'       => $query ? lang('News.search_results') . ': ' . esc($query) : lang('News.search'),
             'breadcrumbs' => [
                 ['label' => lang('News.nav_home'), 'url' => '/' . $this->locale],
                 ['label' => lang('News.search_results'), 'url' => null],
@@ -63,7 +86,7 @@ class Search extends BaseController
             return $this->response->setJSON([]);
         }
 
-        $results = $this->articleModel->searchArticles(trim($query), 10);
+        $results = $this->articleModel->searchArticles(trim($query), [], 10);
         $suggestions = [];
 
         foreach ($results as $article) {

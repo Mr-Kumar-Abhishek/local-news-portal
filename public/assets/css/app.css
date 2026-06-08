@@ -1,0 +1,1263 @@
+/* ==========================================================================
+   Hind Bihar - Frontend Stylesheet (app.css)
+   Hindi/English News Website
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CSS Variables / Design Tokens
+   ========================================================================== */
+:root {
+    --hb-primary: #c0392b;
+    --hb-primary-hover: #a93226;
+    --hb-secondary: #e74c3c;
+    --hb-dark: #2c3e50;
+    --hb-dark-light: #34495e;
+    --hb-light-bg: #f8f9fa;
+    --hb-light-gray: #ecf0f1;
+    --hb-text: #333333;
+    --hb-text-muted: #777777;
+    --hb-border: #dee2e6;
+    --hb-white: #ffffff;
+    --hb-success: #27ae60;
+    --hb-warning: #f39c12;
+    --hb-danger: #e74c3c;
+    --hb-info: #2980b9;
+
+    --hb-font-base: 'Noto Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+    --hb-font-heading: 'Noto Sans', 'Noto Sans Devanagari', sans-serif;
+
+    --hb-radius-sm: 4px;
+    --hb-radius: 8px;
+    --hb-radius-lg: 12px;
+    --hb-shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --hb-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    --hb-shadow-lg: 0 4px 16px rgba(0,0,0,0.15);
+    --hb-transition: 0.2s ease;
+
+    --hb-content-max: 1200px;
+}
+
+/* ==========================================================================
+   2. Base / Typography
+   ========================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--hb-font-base);
+    color: var(--hb-text);
+    background-color: #f4f4f4;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hindi-specific font adjustments */
+:lang(hi) {
+    font-family: 'Noto Sans Devanagari', 'Noto Sans', sans-serif;
+}
+
+:lang(hi) h1, :lang(hi) h2, :lang(hi) h3,
+:lang(hi) h4, :lang(hi) h5, :lang(hi) h6 {
+    font-family: 'Noto Sans Devanagari', 'Noto Sans', sans-serif;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+/* Typography scale */
+h1, .h1 { font-size: 2rem; font-weight: 700; }
+h2, .h2 { font-size: 1.5rem; font-weight: 700; }
+h3, .h3 { font-size: 1.25rem; font-weight: 600; }
+h4, .h4 { font-size: 1.1rem; font-weight: 600; }
+
+a {
+    color: var(--hb-primary);
+    transition: color var(--hb-transition);
+}
+a:hover {
+    color: var(--hb-primary-hover);
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ==========================================================================
+   3. Navigation
+   ========================================================================== */
+.top-bar {
+    background: var(--hb-dark);
+    color: var(--hb-white);
+    font-size: 0.85rem;
+    padding: 6px 0;
+}
+.top-bar a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: color var(--hb-transition);
+}
+.top-bar a:hover {
+    color: var(--hb-white);
+}
+
+.main-nav {
+    background: var(--hb-white) !important;
+    box-shadow: var(--hb-shadow-sm);
+}
+.main-nav .nav-link {
+    color: var(--hb-dark) !important;
+    font-weight: 500;
+    padding: 12px 16px !important;
+    transition: color var(--hb-transition);
+}
+.main-nav .nav-link:hover,
+.main-nav .nav-link.active {
+    color: var(--hb-primary) !important;
+}
+.main-nav .nav-link.dropdown-toggle::after {
+    display: none;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--hb-primary) !important;
+}
+.navbar-brand small {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 400;
+}
+
+/* ==========================================================================
+   4. Article Cards
+   ========================================================================== */
+.news-card {
+    background: var(--hb-white);
+    border-radius: var(--hb-radius);
+    overflow: hidden;
+    box-shadow: var(--hb-shadow);
+    transition: transform var(--hb-transition), box-shadow var(--hb-transition);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.news-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--hb-shadow-lg);
+}
+
+.news-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    background-color: var(--hb-light-gray);
+}
+
+.news-card .card-body {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-card .category-badge {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.news-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+.news-card .card-title a {
+    color: var(--hb-dark);
+    text-decoration: none;
+    transition: color var(--hb-transition);
+}
+.news-card .card-title a:hover {
+    color: var(--hb-primary);
+}
+
+.news-card .card-text {
+    font-size: 0.9rem;
+    color: var(--hb-text-muted);
+    flex: 1;
+}
+
+.news-card .card-footer {
+    background: transparent;
+    border-top: 1px solid var(--hb-border);
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    color: var(--hb-text-muted);
+}
+
+.news-card .card-footer i {
+    margin-right: 4px;
+}
+
+/* Card horizontal variant (for lists) */
+.news-card-horizontal {
+    display: flex;
+    flex-direction: row;
+}
+.news-card-horizontal .card-img-left {
+    width: 200px;
+    min-height: 150px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+@media (max-width: 576px) {
+    .news-card-horizontal {
+        flex-direction: column;
+    }
+    .news-card-horizontal .card-img-left {
+        width: 100%;
+        height: 200px;
+    }
+}
+
+/* ==========================================================================
+   5. Featured Article / Carousel
+   ========================================================================== */
+.featured-news {
+    background: var(--hb-dark);
+    color: var(--hb-white);
+    border-radius: var(--hb-radius);
+    overflow: hidden;
+}
+
+.featured-news .carousel-item {
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+.featured-news .carousel-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+}
+
+.featured-news .carousel-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 40px 20px 20px;
+    text-align: left;
+    z-index: 2;
+}
+.featured-news .carousel-caption h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.featured-news .carousel-caption p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.featured-news .carousel-indicators {
+    z-index: 3;
+}
+
+/* ==========================================================================
+   6. Breaking News Ticker
+   ========================================================================== */
+.breaking-news {
+    background: var(--hb-primary);
+    color: var(--hb-white);
+    padding: 8px 0;
+    font-size: 0.9rem;
+}
+.breaking-news .label {
+    background: var(--hb-white);
+    color: var(--hb-primary);
+    padding: 2px 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-right: 10px;
+    border-radius: var(--hb-radius-sm);
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   7. Section Titles
+   ========================================================================== */
+.section-title {
+    color: var(--hb-dark);
+    font-weight: 700;
+    border-bottom: 3px solid var(--hb-primary);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    position: relative;
+}
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--hb-secondary);
+}
+
+/* ==========================================================================
+   8. Sidebar Widgets
+   ========================================================================== */
+.sidebar-widget {
+    background: var(--hb-white);
+    border-radius: var(--hb-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--hb-shadow);
+}
+.sidebar-widget .widget-title {
+    font-weight: 700;
+    color: var(--hb-dark);
+    border-bottom: 2px solid var(--hb-primary);
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+.sidebar-widget .list-group-item {
+    border: none;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+.sidebar-widget .list-group-item:last-child {
+    border-bottom: none;
+}
+.sidebar-widget .list-group-item a {
+    color: #555;
+    text-decoration: none;
+    transition: color var(--hb-transition);
+}
+.sidebar-widget .list-group-item a:hover {
+    color: var(--hb-primary);
+}
+
+/* Popular Post Items */
+.popular-post-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+.popular-post-item:last-child {
+    border-bottom: none;
+}
+.popular-post-item img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--hb-radius-sm);
+    flex-shrink: 0;
+    background: var(--hb-light-gray);
+}
+.popular-post-item .post-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+.popular-post-item .post-title a {
+    color: var(--hb-dark);
+    text-decoration: none;
+    transition: color var(--hb-transition);
+}
+.popular-post-item .post-title a:hover {
+    color: var(--hb-primary);
+}
+.popular-post-item .post-date {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+/* ==========================================================================
+   9. Tag Cloud
+   ========================================================================== */
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.tag-cloud a {
+    display: inline-block;
+    background: var(--hb-light-bg);
+    color: #555;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all var(--hb-transition);
+    border: 1px solid transparent;
+}
+.tag-cloud a:hover {
+    background: var(--hb-primary);
+    color: var(--hb-white);
+    border-color: var(--hb-primary);
+}
+.tag-cloud .tag-size-1 { font-size: 0.75rem; }
+.tag-cloud .tag-size-2 { font-size: 0.85rem; }
+.tag-cloud .tag-size-3 { font-size: 0.95rem; }
+.tag-cloud .tag-size-4 { font-size: 1.05rem; }
+.tag-cloud .tag-size-5 { font-size: 1.2rem; font-weight: 600; }
+
+/* ==========================================================================
+   10. Comment Section
+   ========================================================================== */
+.comments-section {
+    margin-top: 30px;
+}
+
+.comment {
+    display: flex;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--hb-border);
+}
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--hb-light-gray);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--hb-text-muted);
+    font-size: 1.1rem;
+}
+
+.comment-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+.comment-header .comment-author {
+    font-weight: 600;
+    color: var(--hb-dark);
+}
+.comment-header .comment-date {
+    font-size: 0.8rem;
+    color: var(--hb-text-muted);
+}
+
+.comment-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--hb-text);
+    margin-bottom: 8px;
+    word-wrap: break-word;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 16px;
+}
+.comment-actions button,
+.comment-actions a {
+    font-size: 0.82rem;
+    color: var(--hb-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+    transition: color var(--hb-transition);
+}
+.comment-actions button:hover,
+.comment-actions a:hover {
+    color: var(--hb-primary);
+}
+
+/* Threaded / nested replies */
+.comment-replies {
+    margin-left: 62px;
+    border-left: 2px solid var(--hb-light-gray);
+    padding-left: 16px;
+}
+@media (max-width: 576px) {
+    .comment-replies {
+        margin-left: 20px;
+        padding-left: 10px;
+    }
+}
+
+.comment-reply-form {
+    margin-top: 12px;
+    display: none;
+}
+.comment-reply-form.active {
+    display: block;
+}
+
+.comment-form textarea {
+    resize: vertical;
+    min-height: 100px;
+    border-radius: var(--hb-radius-sm);
+    border: 1px solid var(--hb-border);
+    padding: 12px;
+    font-size: 0.95rem;
+    transition: border-color var(--hb-transition);
+}
+.comment-form textarea:focus {
+    border-color: var(--hb-primary);
+    box-shadow: 0 0 0 2px rgba(192,57,43,0.15);
+    outline: none;
+}
+
+/* ==========================================================================
+   11. Search Autocomplete Dropdown
+   ========================================================================== */
+.search-wrapper {
+    position: relative;
+}
+
+.search-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--hb-white);
+    border: 1px solid var(--hb-border);
+    border-radius: 0 0 var(--hb-radius-sm) var(--hb-radius-sm);
+    box-shadow: var(--hb-shadow-lg);
+    z-index: 1050;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+.search-autocomplete.show {
+    display: block;
+}
+
+.search-autocomplete-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--hb-light-gray);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background var(--hb-transition);
+}
+.search-autocomplete-item:last-child {
+    border-bottom: none;
+}
+.search-autocomplete-item:hover,
+.search-autocomplete-item.active {
+    background: var(--hb-light-bg);
+}
+.search-autocomplete-item img {
+    width: 40px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+.search-autocomplete-item .ac-title {
+    font-size: 0.9rem;
+    color: var(--hb-dark);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.search-autocomplete-item .ac-category {
+    font-size: 0.75rem;
+    color: var(--hb-text-muted);
+}
+.search-autocomplete-no-results {
+    padding: 14px;
+    text-align: center;
+    color: var(--hb-text-muted);
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   12. Breadcrumb
+   ========================================================================== */
+.breadcrumb-custom {
+    background: transparent;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+.breadcrumb-custom a {
+    color: var(--hb-text-muted);
+    text-decoration: none;
+    transition: color var(--hb-transition);
+}
+.breadcrumb-custom a:hover {
+    color: var(--hb-primary);
+}
+.breadcrumb-custom .separator {
+    margin: 0 8px;
+    color: var(--hb-border);
+}
+.breadcrumb-custom .active {
+    color: var(--hb-dark);
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   13. Author Page
+   ========================================================================== */
+.author-header {
+    background: var(--hb-white);
+    border-radius: var(--hb-radius);
+    padding: 30px;
+    box-shadow: var(--hb-shadow);
+    margin-bottom: 30px;
+    text-align: center;
+}
+.author-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 16px;
+    border: 3px solid var(--hb-primary);
+}
+.author-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--hb-dark);
+    margin-bottom: 4px;
+}
+.author-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 16px;
+}
+.author-stat {
+    text-align: center;
+}
+.author-stat .stat-number {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--hb-primary);
+}
+.author-stat .stat-label {
+    font-size: 0.8rem;
+    color: var(--hb-text-muted);
+}
+
+/* ==========================================================================
+   14. Article Detail Page
+   ========================================================================== */
+.page-header {
+    background: var(--hb-white);
+    padding: 20px 0;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.article-content {
+    background: var(--hb-white);
+    padding: 30px;
+    border-radius: var(--hb-radius);
+    box-shadow: var(--hb-shadow);
+}
+.article-content h1 {
+    font-weight: 700;
+    color: var(--hb-dark);
+}
+.article-content .meta {
+    color: #888;
+    font-size: 0.9rem;
+}
+.article-content .meta span {
+    margin-right: 16px;
+}
+.article-content .meta i {
+    margin-right: 4px;
+}
+.article-content .featured-image {
+    width: 100%;
+    border-radius: var(--hb-radius);
+    margin: 20px 0;
+}
+.article-content .body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--hb-text);
+}
+.article-content .body p {
+    margin-bottom: 16px;
+}
+.article-content .body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--hb-radius-sm);
+    margin: 16px 0;
+}
+.article-content .body blockquote {
+    border-left: 4px solid var(--hb-primary);
+    background: var(--hb-light-bg);
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-style: italic;
+    color: #555;
+    border-radius: 0 var(--hb-radius-sm) var(--hb-radius-sm) 0;
+}
+
+/* Share buttons */
+.share-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--hb-white);
+    transition: opacity var(--hb-transition), transform var(--hb-transition);
+    border: none;
+    cursor: pointer;
+}
+.share-btn:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+    color: var(--hb-white);
+}
+.share-btn.facebook { background: #1877f2; }
+.share-btn.twitter  { background: #0f1419; }
+.share-btn.whatsapp { background: #25d366; }
+.share-btn.copy     { background: #6c757d; }
+.share-btn.telegram { background: #0088cc; }
+
+/* ==========================================================================
+   15. Auth Forms
+   ========================================================================== */
+.auth-form {
+    max-width: 450px;
+    margin: 40px auto;
+    background: var(--hb-white);
+    padding: 30px;
+    border-radius: var(--hb-radius);
+    box-shadow: var(--hb-shadow);
+}
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--hb-dark);
+    font-weight: 700;
+}
+.auth-form .form-label {
+    font-weight: 500;
+    color: var(--hb-dark);
+}
+.auth-form .form-control {
+    border-radius: var(--hb-radius-sm);
+    border: 1px solid var(--hb-border);
+    padding: 10px 14px;
+    transition: border-color var(--hb-transition), box-shadow var(--hb-transition);
+}
+.auth-form .form-control:focus {
+    border-color: var(--hb-primary);
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.12);
+}
+.auth-form .btn-primary {
+    width: 100%;
+    padding: 10px;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   16. Pagination
+   ========================================================================== */
+.pagination-custom {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+.pagination-custom a,
+.pagination-custom span {
+    padding: 8px 14px;
+    border-radius: var(--hb-radius-sm);
+    text-decoration: none;
+    background: var(--hb-white);
+    color: var(--hb-dark);
+    border: 1px solid var(--hb-border);
+    transition: all var(--hb-transition);
+    font-size: 0.9rem;
+}
+.pagination-custom a:hover {
+    background: var(--hb-primary);
+    color: var(--hb-white);
+    border-color: var(--hb-primary);
+}
+.pagination-custom .active {
+    background: var(--hb-primary);
+    color: var(--hb-white);
+    border-color: var(--hb-primary);
+    font-weight: 600;
+}
+.pagination-custom .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   17. Buttons
+   ========================================================================== */
+.btn-primary {
+    background-color: var(--hb-primary);
+    border-color: var(--hb-primary);
+}
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--hb-primary-hover);
+    border-color: var(--hb-primary-hover);
+}
+.btn-outline-primary {
+    color: var(--hb-primary);
+    border-color: var(--hb-primary);
+}
+.btn-outline-primary:hover {
+    background-color: var(--hb-primary);
+    border-color: var(--hb-primary);
+    color: var(--hb-white);
+}
+
+.text-primary { color: var(--hb-primary) !important; }
+.bg-primary { background-color: var(--hb-primary) !important; }
+
+/* ==========================================================================
+   18. Footer
+   ========================================================================== */
+.footer {
+    background: var(--hb-dark);
+    color: rgba(255,255,255,0.8);
+    padding: 40px 0 20px;
+    margin-top: 50px;
+}
+.footer h5 {
+    color: var(--hb-white);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.footer a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color var(--hb-transition);
+}
+.footer a:hover {
+    color: var(--hb-white);
+}
+.footer .social-links {
+    display: flex;
+    gap: 8px;
+}
+.footer .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    text-align: center;
+    transition: background var(--hb-transition);
+}
+.footer .social-links a:hover {
+    background: var(--hb-primary);
+}
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+    margin-top: 20px;
+    font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   19. Back to Top Button
+   ========================================================================== */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 44px;
+    height: 44px;
+    background: var(--hb-primary);
+    color: var(--hb-white);
+    border: none;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: var(--hb-shadow-lg);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--hb-transition), transform var(--hb-transition),
+                opacity var(--hb-transition), visibility var(--hb-transition);
+    opacity: 0;
+    visibility: hidden;
+}
+.back-to-top.visible {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+.back-to-top:hover {
+    background: var(--hb-primary-hover);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   20. Lazy Loading Images
+   ========================================================================== */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* Lazy placeholder */
+.lazy-placeholder {
+    background: var(--hb-light-gray);
+    position: relative;
+    overflow: hidden;
+}
+.lazy-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.4) 50%,
+        transparent 100%
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* ==========================================================================
+   21. Category Section
+   ========================================================================== */
+.category-section {
+    margin-bottom: 30px;
+}
+
+/* ==========================================================================
+   22. Status / Badge Colors
+   ========================================================================== */
+.badge-published { background-color: var(--hb-success); color: #fff; }
+.badge-draft     { background-color: #6c757d; color: #fff; }
+.badge-pending   { background-color: var(--hb-warning); color: #212529; }
+.badge-archived  { background-color: #343a40; color: #fff; }
+.badge-featured  { background-color: var(--hb-primary); color: #fff; }
+.badge-breaking  { background-color: var(--hb-danger); color: #fff; }
+.badge-trending  { background-color: var(--hb-warning); color: #212529; }
+
+/* ==========================================================================
+   23. RTL Support (Arabic/Urdu)
+   ========================================================================== */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] .section-title::after {
+    left: auto;
+    right: 0;
+}
+
+[dir="rtl"] .comment-replies {
+    margin-left: 0;
+    margin-right: 62px;
+    border-left: none;
+    border-right: 2px solid var(--hb-light-gray);
+    padding-left: 0;
+    padding-right: 16px;
+}
+
+[dir="rtl"] .ms-auto { margin-left: 0 !important; margin-right: auto !important; }
+[dir="rtl"] .me-2  { margin-right: 0 !important; margin-left: 0.5rem !important; }
+[dir="rtl"] .me-3  { margin-right: 0 !important; margin-left: 1rem !important; }
+[dir="rtl"] .ms-2  { margin-left: 0 !important; margin-right: 0.5rem !important; }
+
+[dir="rtl"] .popular-post-item {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .featured-news .carousel-caption {
+    text-align: right;
+}
+
+/* ==========================================================================
+   24. Print Styles
+   ========================================================================== */
+@media print {
+    body {
+        background: #fff;
+        color: #000;
+        font-size: 12pt;
+    }
+
+    .top-bar,
+    .main-nav,
+    .footer,
+    .sidebar-widget,
+    .share-buttons,
+    .comments-section,
+    .back-to-top,
+    .breaking-news,
+    .auth-form,
+    .pagination-custom,
+    .breadcrumb-custom,
+    .search-wrapper {
+        display: none !important;
+    }
+
+    .article-content {
+        box-shadow: none;
+        padding: 0;
+        border-radius: 0;
+    }
+
+    .article-content .body {
+        font-size: 11pt;
+        line-height: 1.6;
+    }
+
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    .container {
+        max-width: 100%;
+        width: 100%;
+        padding: 0;
+    }
+}
+
+/* ==========================================================================
+   25. Dark Mode (prefers-color-scheme)
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --hb-dark: #1a1a2e;
+        --hb-light-bg: #16213e;
+        --hb-white: #1e1e2e;
+        --hb-text: #e0e0e0;
+        --hb-text-muted: #a0a0a0;
+        --hb-border: #333;
+        --hb-light-gray: #2a2a3e;
+    }
+
+    body {
+        background-color: #121212;
+        color: var(--hb-text);
+    }
+
+    .main-nav {
+        background: #1a1a2e !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .main-nav .nav-link {
+        color: #ccc !important;
+    }
+    .main-nav .nav-link:hover,
+    .main-nav .nav-link.active {
+        color: var(--hb-secondary) !important;
+    }
+
+    .news-card {
+        background: #1e1e2e;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .news-card .card-title a {
+        color: #e0e0e0;
+    }
+    .news-card .card-text {
+        color: #aaa;
+    }
+
+    .sidebar-widget {
+        background: #1e1e2e;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .sidebar-widget .list-group-item {
+        border-bottom-color: #333;
+    }
+    .sidebar-widget .list-group-item a {
+        color: #ccc;
+    }
+
+    .article-content {
+        background: #1e1e2e;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .article-content .body blockquote {
+        background: #2a2a3e;
+        color: #ccc;
+    }
+
+    .auth-form {
+        background: #1e1e2e;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .auth-form .form-control {
+        background: #2a2a3e;
+        border-color: #444;
+        color: #e0e0e0;
+    }
+
+    .top-bar {
+        background: #0d0d1a;
+    }
+
+    .footer {
+        background: #0d0d1a;
+    }
+
+    .page-header {
+        background: #1e1e2e;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .pagination-custom a,
+    .pagination-custom span {
+        background: #1e1e2e;
+        color: #ccc;
+        border-color: #444;
+    }
+
+    .author-header {
+        background: #1e1e2e;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .tag-cloud a {
+        background: #2a2a3e;
+        color: #ccc;
+    }
+
+    .featured-news {
+        background: #0d0d1a;
+    }
+
+    .table {
+        color: var(--hb-text);
+    }
+
+    .form-control {
+        background-color: #2a2a3e;
+        border-color: #444;
+        color: #e0e0e0;
+    }
+    .form-control:focus {
+        background-color: #2a2a3e;
+        color: #e0e0e0;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #777 !important;
+    }
+}
+
+/* ==========================================================================
+   26. Responsive
+   ========================================================================== */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.4rem;
+    }
+
+    .featured-news .carousel-item {
+        min-height: 250px;
+    }
+    .featured-news .carousel-caption h3 {
+        font-size: 1.1rem;
+    }
+
+    .article-content {
+        padding: 20px;
+    }
+    .article-content h1 {
+        font-size: 1.4rem;
+    }
+
+    .comment-replies {
+        margin-left: 20px;
+        padding-left: 10px;
+    }
+
+    .author-stats {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .share-buttons {
+        justify-content: center;
+    }
+
+    .popular-post-item img {
+        width: 60px;
+        height: 45px;
+    }
+
+    .article-content .body {
+        font-size: 1rem;
+    }
+}

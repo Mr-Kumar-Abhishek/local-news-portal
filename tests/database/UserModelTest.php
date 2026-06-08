@@ -2,21 +2,14 @@
 
 namespace Tests\Database;
 
-use CodeIgniter\Test\CIUnitTestCase;
-use CodeIgniter\Test\DatabaseTestTrait;
+use Tests\Support\DatabaseTestCase;
 use App\Models\UserModel;
-use App\Database\Seeds\HindBiharSeeder;
 
 /**
  * @internal
  */
-final class UserModelTest extends CIUnitTestCase
+final class UserModelTest extends DatabaseTestCase
 {
-    use DatabaseTestTrait;
-
-    protected $migrate   = true;
-    protected $namespace = null;
-    protected $seed      = HindBiharSeeder::class;
 
     public function testUserCreationAndHashing(): void
     {

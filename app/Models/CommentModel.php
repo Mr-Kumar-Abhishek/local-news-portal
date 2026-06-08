@@ -13,7 +13,7 @@ class CommentModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'article_id', 'user_id', 'author_name',
+        'article_id', 'parent_id', 'user_id', 'author_name',
         'author_email', 'body', 'status',
     ];
 
@@ -33,6 +33,33 @@ class CommentModel extends Model
     ];
 
     protected $skipValidation = false;
+
+    public function getThreadedComments(int $articleId): array
+    {
+        $allComments = $this->where('article_id', $articleId)
+                            ->where('status', 'approved')
+                            ->orderBy('created_at', 'ASC')
+                            ->findAll();
+
+        // Convert to array keyed by id for efficient lookup
+        $byId = [];
+        $roots = [];
+
+        foreach ($allComments as $comment) {
+            $byId[$comment->id] = $comment;
+            $comment->children = [];
+        }
+
+        foreach ($allComments as $comment) {
+            if (!empty($comment->parent_id) && isset($byId[$comment->parent_id])) {
+                $byId[$comment->parent_id]->children[] = $comment;
+            } else {
+                $roots[] = $comment;
+            }
+        }
+
+        return $roots;
+    }
 
     public function getApprovedComments(int $articleId): array
     {

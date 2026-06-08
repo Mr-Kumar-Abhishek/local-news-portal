@@ -1,0 +1,759 @@
+/* ==========================================================================
+   Hind Bihar - Admin Panel Stylesheet (admin.css)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CSS Variables
+   ========================================================================== */
+:root {
+    --admin-sidebar-bg: #1a1a2e;
+    --admin-sidebar-hover: rgba(255,255,255,0.08);
+    --admin-sidebar-active: rgba(192,57,43,0.2);
+    --admin-primary: #c0392b;
+    --admin-primary-hover: #a93226;
+    --admin-success: #27ae60;
+    --admin-warning: #f39c12;
+    --admin-danger: #e74c3c;
+    --admin-info: #2980b9;
+    --admin-bg: #f0f2f5;
+    --admin-card-bg: #ffffff;
+    --admin-text: #333333;
+    --admin-text-muted: #777777;
+    --admin-border: #dee2e6;
+    --admin-radius: 10px;
+    --admin-radius-sm: 6px;
+    --admin-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    --admin-shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+    --admin-transition: 0.2s ease;
+}
+
+/* ==========================================================================
+   2. Admin Layout Overrides
+   ========================================================================== */
+.admin-sidebar {
+    background: var(--admin-sidebar-bg);
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.admin-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.admin-header {
+    background: var(--admin-card-bg);
+    padding: 15px 25px;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.admin-footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--admin-text-muted);
+    font-size: 0.85rem;
+}
+
+/* Sidebar brand */
+.sidebar-brand {
+    padding: 20px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color var(--admin-transition);
+}
+.sidebar-brand:hover {
+    color: var(--admin-primary);
+}
+
+/* Sidebar navigation */
+.sidebar-nav {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    transition: all var(--admin-transition);
+    font-size: 0.92rem;
+    border-left: 3px solid transparent;
+    white-space: nowrap;
+}
+.sidebar-nav li a:hover {
+    background: var(--admin-sidebar-hover);
+    color: #ffffff;
+    border-left-color: rgba(255,255,255,0.3);
+}
+.sidebar-nav li a.active {
+    background: var(--admin-sidebar-active);
+    color: #ffffff;
+    border-left-color: var(--admin-primary);
+    font-weight: 500;
+}
+.sidebar-nav li a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+/* Sidebar divider */
+.sidebar-divider {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin: 10px 20px;
+}
+
+/* ==========================================================================
+   3. Dashboard Stat Cards
+   ========================================================================== */
+.stat-card {
+    background: var(--admin-card-bg);
+    border-radius: var(--admin-radius);
+    padding: 24px 20px;
+    box-shadow: var(--admin-shadow);
+    text-align: center;
+    transition: transform var(--admin-transition), box-shadow var(--admin-transition);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--admin-shadow-lg);
+}
+
+.stat-card .stat-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    display: block;
+}
+.stat-card .stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--admin-text);
+    line-height: 1.2;
+}
+.stat-card .stat-label {
+    color: var(--admin-text-muted);
+    font-size: 0.85rem;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Stat card color variants */
+.stat-card.primary   { border-top: 3px solid var(--admin-primary); }
+.stat-card.success   { border-top: 3px solid var(--admin-success); }
+.stat-card.warning   { border-top: 3px solid var(--admin-warning); }
+.stat-card.danger    { border-top: 3px solid var(--admin-danger); }
+.stat-card.info      { border-top: 3px solid var(--admin-info); }
+
+.stat-card.primary .stat-icon   { color: var(--admin-primary); }
+.stat-card.success .stat-icon   { color: var(--admin-success); }
+.stat-card.warning .stat-icon   { color: var(--admin-warning); }
+.stat-card.danger .stat-icon    { color: var(--admin-danger); }
+.stat-card.info .stat-icon      { color: var(--admin-info); }
+
+/* ==========================================================================
+   4. Admin Table Enhancements
+   ========================================================================== */
+.admin-table {
+    background: var(--admin-card-bg);
+    border-radius: var(--admin-radius);
+    overflow: hidden;
+}
+
+.admin-table .table {
+    margin-bottom: 0;
+}
+
+.admin-table .table th {
+    font-weight: 600;
+    color: #555;
+    border-top: none;
+    background: #fafafa;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.admin-table .table td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+.admin-table .table tbody tr {
+    transition: background var(--admin-transition);
+}
+.admin-table .table tbody tr:hover {
+    background: rgba(0,0,0,0.02);
+}
+
+/* Compact table variant */
+.table-compact th,
+.table-compact td {
+    padding: 8px 12px !important;
+}
+
+/* ==========================================================================
+   5. Status Badge Colors
+   ========================================================================== */
+.badge {
+    font-weight: 500;
+    font-size: 0.78rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.badge-published,
+.badge.bg-success {
+    background-color: var(--admin-success) !important;
+    color: #fff;
+}
+.badge-draft,
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: #fff;
+}
+.badge-pending,
+.badge.bg-warning {
+    background-color: var(--admin-warning) !important;
+    color: #212529;
+}
+.badge-archived,
+.badge.bg-dark {
+    background-color: #343a40 !important;
+    color: #fff;
+}
+.badge-featured {
+    background-color: var(--admin-primary) !important;
+    color: #fff;
+}
+.badge-danger,
+.badge.bg-danger {
+    background-color: var(--admin-danger) !important;
+    color: #fff;
+}
+.badge-info,
+.badge.bg-info {
+    background-color: var(--admin-info) !important;
+    color: #fff;
+}
+
+/* ==========================================================================
+   6. Cards & Panels
+   ========================================================================== */
+.card {
+    border: none;
+    border-radius: var(--admin-radius);
+    box-shadow: var(--admin-shadow);
+    margin-bottom: 20px;
+}
+.card-header {
+    background: #ffffff;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+    padding: 14px 20px;
+    border-radius: var(--admin-radius) var(--admin-radius) 0 0 !important;
+}
+.card-body {
+    padding: 20px;
+}
+
+/* ==========================================================================
+   7. Form Improvements
+   ========================================================================== */
+.form-label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: var(--admin-radius-sm);
+    border: 1px solid var(--admin-border);
+    padding: 9px 14px;
+    font-size: 0.92rem;
+    transition: border-color var(--admin-transition), box-shadow var(--admin-transition);
+}
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+}
+
+.form-control-lg {
+    padding: 12px 16px;
+    font-size: 1rem;
+}
+.form-control-sm {
+    padding: 5px 10px;
+    font-size: 0.82rem;
+}
+
+/* Textarea */
+textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Checkbox / Radio */
+.form-check-input:checked {
+    background-color: var(--admin-primary);
+    border-color: var(--admin-primary);
+}
+
+/* File input */
+.form-file-preview {
+    margin-top: 10px;
+}
+.form-file-preview img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: var(--admin-radius-sm);
+    border: 1px solid var(--admin-border);
+    object-fit: cover;
+}
+.form-file-preview .file-info {
+    font-size: 0.82rem;
+    color: var(--admin-text-muted);
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   8. TinyMCE / Rich Editor Container
+   ========================================================================== */
+.editor-container {
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    overflow: hidden;
+}
+.editor-container .tox-tinymce {
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.editor-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.editor-label .lang-tab {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #eee;
+    cursor: pointer;
+    transition: background var(--admin-transition);
+}
+.editor-label .lang-tab.active {
+    background: var(--admin-primary);
+    color: #fff;
+}
+
+/* ==========================================================================
+   9. Buttons
+   ========================================================================== */
+.btn {
+    border-radius: var(--admin-radius-sm);
+    font-weight: 500;
+    transition: all var(--admin-transition);
+    font-size: 0.9rem;
+    padding: 8px 16px;
+}
+.btn-sm {
+    padding: 5px 12px;
+    font-size: 0.82rem;
+}
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: var(--admin-primary);
+    border-color: var(--admin-primary);
+}
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--admin-primary-hover);
+    border-color: var(--admin-primary-hover);
+}
+
+.btn-outline-primary {
+    color: var(--admin-primary);
+    border-color: var(--admin-primary);
+}
+.btn-outline-primary:hover {
+    background-color: var(--admin-primary);
+    border-color: var(--admin-primary);
+    color: #fff;
+}
+
+.btn-icon {
+    padding: 6px 10px;
+    line-height: 1;
+}
+
+/* Action button group in tables */
+.btn-action-group {
+    display: flex;
+    gap: 4px;
+}
+.btn-action-group .btn {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   10. Alerts & Notifications
+   ========================================================================== */
+.alert {
+    border: none;
+    border-radius: var(--admin-radius-sm);
+    padding: 14px 18px;
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   11. Filter Bar
+   ========================================================================== */
+.filter-bar {
+    background: var(--admin-card-bg);
+    border-radius: var(--admin-radius-sm);
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: var(--admin-shadow);
+}
+.filter-bar .form-control,
+.filter-bar .form-select {
+    height: 38px;
+}
+
+/* ==========================================================================
+   12. Pagination in Admin
+   ========================================================================== */
+.admin-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.admin-pagination .showing {
+    font-size: 0.85rem;
+    color: var(--admin-text-muted);
+}
+
+/* ==========================================================================
+   13. Tag Input Enhancement
+   ========================================================================== */
+.tag-input-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px;
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    min-height: 42px;
+    cursor: text;
+    transition: border-color var(--admin-transition);
+}
+.tag-input-wrapper:focus-within {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+}
+
+.tag-input-wrapper .tag-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #e9ecef;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    color: var(--admin-text);
+}
+.tag-input-wrapper .tag-item .tag-remove {
+    cursor: pointer;
+    color: var(--admin-text-muted);
+    font-weight: bold;
+    transition: color var(--admin-transition);
+    background: none;
+    border: none;
+    padding: 0 2px;
+    font-size: 1rem;
+    line-height: 1;
+}
+.tag-input-wrapper .tag-item .tag-remove:hover {
+    color: var(--admin-danger);
+}
+.tag-input-wrapper input.tag-input {
+    border: none;
+    outline: none;
+    flex: 1;
+    min-width: 100px;
+    padding: 4px;
+    font-size: 0.9rem;
+    background: transparent;
+}
+
+/* ==========================================================================
+   14. Media Grid
+   ========================================================================== */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+.media-item {
+    background: var(--admin-card-bg);
+    border-radius: var(--admin-radius-sm);
+    overflow: hidden;
+    box-shadow: var(--admin-shadow);
+    transition: transform var(--admin-transition), box-shadow var(--admin-transition);
+    cursor: pointer;
+}
+.media-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--admin-shadow-lg);
+}
+.media-item img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+}
+.media-item .media-info {
+    padding: 10px;
+    font-size: 0.8rem;
+    color: var(--admin-text-muted);
+}
+.media-item .media-name {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--admin-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.media-item.selected {
+    outline: 3px solid var(--admin-primary);
+    outline-offset: -3px;
+}
+
+/* ==========================================================================
+   15. Modal / Confirm Dialog
+   ========================================================================== */
+.modal-confirm .modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.modal-confirm .modal-footer {
+    border-top: none;
+    padding-top: 0;
+}
+
+/* ==========================================================================
+   16. Loading State
+   ========================================================================== */
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: var(--admin-radius);
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--admin-border);
+    border-top-color: var(--admin-primary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   17. Responsive Fixes for Admin
+   ========================================================================== */
+@media (max-width: 992px) {
+    .admin-sidebar {
+        width: 60px;
+        overflow: hidden;
+    }
+    .admin-sidebar:hover {
+        width: 250px;
+    }
+    .admin-sidebar .sidebar-brand span,
+    .admin-sidebar .sidebar-nav li a span,
+    .admin-sidebar .sidebar-nav li a i + * {
+        display: none;
+    }
+    .admin-sidebar:hover .sidebar-brand span,
+    .admin-sidebar:hover .sidebar-nav li a span {
+        display: inline;
+    }
+    .admin-content {
+        margin-left: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 100%;
+        position: relative;
+        min-height: auto;
+    }
+    .admin-content {
+        margin-left: 0;
+    }
+    .admin-sidebar:hover {
+        width: 100%;
+    }
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .media-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+    .stat-card {
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-content {
+        padding: 10px;
+    }
+    .admin-header {
+        padding: 12px 15px;
+    }
+    .card-body {
+        padding: 14px;
+    }
+    .admin-table .table th,
+    .admin-table .table td {
+        padding: 8px 10px;
+    }
+    .media-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
+
+/* ==========================================================================
+   18. Dark Mode for Admin
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --admin-bg: #1a1a2e;
+        --admin-card-bg: #1e1e2e;
+        --admin-text: #e0e0e0;
+        --admin-text-muted: #999;
+        --admin-border: #333;
+    }
+
+    body {
+        background: #121220;
+    }
+
+    .admin-header {
+        background: var(--admin-card-bg);
+    }
+
+    .card {
+        background: var(--admin-card-bg);
+    }
+    .card-header {
+        background: var(--admin-card-bg);
+        border-bottom-color: #333;
+    }
+
+    .admin-table .table th {
+        background: #252540;
+        color: #ccc;
+    }
+    .admin-table .table td {
+        color: var(--admin-text);
+    }
+    .admin-table .table tbody tr:hover {
+        background: rgba(255,255,255,0.03);
+    }
+
+    .form-control,
+    .form-select {
+        background-color: #2a2a3e;
+        border-color: #444;
+        color: var(--admin-text);
+    }
+    .form-control:focus,
+    .form-select:focus {
+        background-color: #2a2a3e;
+        color: var(--admin-text);
+    }
+
+    .filter-bar {
+        background: var(--admin-card-bg);
+    }
+
+    .tag-input-wrapper {
+        background: #2a2a3e;
+        border-color: #444;
+    }
+    .tag-input-wrapper .tag-item {
+        background: #333355;
+        color: #ddd;
+    }
+
+    .editor-label .lang-tab {
+        background: #333;
+    }
+
+    .table {
+        color: var(--admin-text);
+    }
+
+    .loading-overlay {
+        background: rgba(30,30,46,0.7);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #666 !important;
+    }
+}

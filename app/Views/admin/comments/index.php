@@ -30,9 +30,10 @@
                             <input type="checkbox" id="select-all">
                         </th>
                         <th>Comment</th>
-                        <th width="150">Article</th>
-                        <th width="120">Author</th>
-                        <th width="100">Date</th>
+                        <th width="80">Reply To</th>
+                        <th width="130">Article</th>
+                        <th width="100">Author</th>
+                        <th width="90">Date</th>
                         <th width="90">Status</th>
                         <th width="140">Actions</th>
                     </tr>
@@ -40,16 +41,30 @@
                 <tbody>
                     <?php if (!empty($comments)) : ?>
                         <?php foreach ($comments as $comment) : ?>
-                        <tr class="<?= $comment['status'] === 'pending' ? 'table-warning' : '' ?>">
+                        <tr class="<?= ($comment['status'] ?? '') === 'pending' ? 'table-warning' : '' ?> <?= !empty($comment['parent_id']) ? 'table-light border-start border-3 border-info' : '' ?>">
                             <td><input type="checkbox" class="select-item" value="<?= $comment['id'] ?>"></td>
                             <td>
-                                <div class="fw-medium"><?= esc(mb_substr($comment['content'], 0, 100)) ?></div>
+                                <?php if (!empty($comment['parent_id'])): ?>
+                                    <span class="badge bg-info me-1" title="Reply to comment #<?= $comment['parent_id'] ?>">
+                                        <i class="bi bi-reply-fill"></i>
+                                    </span>
+                                <?php endif; ?>
+                                <div class="fw-medium"><?= esc(mb_substr($comment['body'] ?? $comment['content'] ?? '', 0, 100)) ?></div>
                                 <small class="text-muted">
-                                    <?= mb_strlen($comment['content']) > 100 ? '...' : '' ?>
-                                    <?php if ($comment['status'] === 'pending') : ?>
+                                    <?= mb_strlen($comment['body'] ?? $comment['content'] ?? '') > 100 ? '...' : '' ?>
+                                    <?php if (($comment['status'] ?? '') === 'pending') : ?>
                                         <span class="badge bg-warning text-dark ms-1">Awaiting moderation</span>
                                     <?php endif; ?>
                                 </small>
+                            </td>
+                            <td>
+                                <?php if (!empty($comment['parent_id'])): ?>
+                                    <small class="text-muted">
+                                        <i class="bi bi-arrow-return-right"></i> #<?= esc($comment['parent_id']) ?>
+                                    </small>
+                                <?php else: ?>
+                                    <span class="text-muted small">—</span>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <a href="<?= site_url($locale . '/admin/news/edit/' . $comment['article_id']) ?>" class="text-decoration-none small">
@@ -108,7 +123,7 @@
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="7" class="text-center py-4 text-muted">
+                            <td colspan="8" class="text-center py-4 text-muted">
                                 <i class="bi bi-chat-dots fs-3 d-block mb-2"></i>
                                 No comments found.
                             </td>

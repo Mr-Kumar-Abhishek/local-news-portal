@@ -15,9 +15,10 @@ final class AuthTest extends CIUnitTestCase
     use DatabaseTestTrait;
     use FeatureTestTrait;
 
-    protected $migrate   = true;
-    protected $namespace = null;
-    protected $seed      = HindBiharSeeder::class;
+    protected $migrate     = true;
+    protected $migrateOnce = true;
+    protected $namespace   = null;
+    protected $seed        = HindBiharSeeder::class;
 
     public function testAdminAccessWithoutLoginRedirectsToLogin(): void
     {

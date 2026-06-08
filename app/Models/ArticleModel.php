@@ -247,9 +247,89 @@ class ArticleModel extends Model
         return $builder->get()->getResultArray();
     }
 
-    public function searchArticles(string $query, int $limit = 20): array
+    public function searchArticles(string $query, array $filters = [], int $perPage = 12, int $offset = 0): array
     {
-        return $this->getPublished(['search' => $query], $limit);
+        $builder = $this->db->table('articles');
+        $builder->select('articles.*, categories.name_en as category_name, categories.name_hi as category_name_hi, categories.slug as category_slug, users.full_name as author_name');
+        $builder->join('categories', 'categories.id = articles.category_id', 'left');
+        $builder->join('users', 'users.id = articles.author_id', 'left');
+        $builder->where('articles.status', 'published');
+
+        // Full-text search
+        if (!empty($query)) {
+            $builder->groupStart();
+            $builder->like('articles.title_en', $query);
+            $builder->orLike('articles.title_hi', $query);
+            $builder->orLike('articles.content_en', $query);
+            $builder->orLike('articles.content_hi', $query);
+            $builder->groupEnd();
+        }
+
+        // Date range filter
+        if (!empty($filters['date_from'])) {
+            $builder->where('articles.published_at >=', $filters['date_from'] . ' 00:00:00');
+        }
+        if (!empty($filters['date_to'])) {
+            $builder->where('articles.published_at <=', $filters['date_to'] . ' 23:59:59');
+        }
+
+        // Category filter (by slug)
+        if (!empty($filters['category'])) {
+            $builder->where('categories.slug', $filters['category']);
+        }
+
+        // Author filter (by username)
+        if (!empty($filters['author'])) {
+            $builder->where('users.username', $filters['author']);
+        }
+
+        // Language filter
+        if (!empty($filters['language']) && $filters['language'] !== 'both') {
+            $builder->where('articles.language', $filters['language']);
+        }
+
+        $builder->orderBy('articles.published_at', 'DESC');
+        $builder->limit($perPage, $offset);
+
+        return $builder->get()->getResult();
+    }
+
+    public function searchArticlesCount(string $query, array $filters = []): int
+    {
+        $builder = $this->db->table('articles');
+        $builder->join('categories', 'categories.id = articles.category_id', 'left');
+        $builder->join('users', 'users.id = articles.author_id', 'left');
+        $builder->where('articles.status', 'published');
+
+        if (!empty($query)) {
+            $builder->groupStart();
+            $builder->like('articles.title_en', $query);
+            $builder->orLike('articles.title_hi', $query);
+            $builder->orLike('articles.content_en', $query);
+            $builder->orLike('articles.content_hi', $query);
+            $builder->groupEnd();
+        }
+
+        if (!empty($filters['date_from'])) {
+            $builder->where('articles.published_at >=', $filters['date_from'] . ' 00:00:00');
+        }
+        if (!empty($filters['date_to'])) {
+            $builder->where('articles.published_at <=', $filters['date_to'] . ' 23:59:59');
+        }
+
+        if (!empty($filters['category'])) {
+            $builder->where('categories.slug', $filters['category']);
+        }
+
+        if (!empty($filters['author'])) {
+            $builder->where('users.username', $filters['author']);
+        }
+
+        if (!empty($filters['language']) && $filters['language'] !== 'both') {
+            $builder->where('articles.language', $filters['language']);
+        }
+
+        return $builder->countAllResults();
     }
 
     public function getPendingArticles(int $limit = 20): array
@@ -284,9 +364,9 @@ class ArticleModel extends Model
     public function getMonthlyArticleCounts(): array
     {
         $builder = $this->db->table('articles');
-        $builder->select("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count");
+        $builder->select("strftime('%Y-%m', created_at) as month, COUNT(*) as count");
         $builder->where('status', 'published');
-        $builder->groupBy("DATE_FORMAT(created_at, '%Y-%m')");
+        $builder->groupBy("strftime('%Y-%m', created_at)");
         $builder->orderBy('month', 'DESC');
         $builder->limit(12);
 

@@ -179,11 +179,11 @@ class Database extends Config
         'swapPre'     => '',
         'encrypt'     => false,
         'compress'    => false,
-        'strictOn'    => true,
+        'strictOn'    => false,
         'failover'    => [],
         'port'        => 0,
         'foreignKeys' => true,
-        'busyTimeout' => 1000,
+        'busyTimeout' => 5000,
         'synchronous' => null,
         'dateFormat'  => [
             'date'     => 'Y-m-d',

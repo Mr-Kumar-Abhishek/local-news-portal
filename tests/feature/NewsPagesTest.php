@@ -15,9 +15,10 @@ final class NewsPagesTest extends CIUnitTestCase
     use DatabaseTestTrait;
     use FeatureTestTrait;
 
-    protected $migrate   = true;
-    protected $namespace = null;
-    protected $seed      = HindBiharSeeder::class;
+    protected $migrate     = true;
+    protected $migrateOnce = true;
+    protected $namespace   = null;
+    protected $seed        = HindBiharSeeder::class;
 
     public function testHomepageLoadsSuccessfully(): void
     {
@@ -44,6 +45,146 @@ final class NewsPagesTest extends CIUnitTestCase
         $response = $this->get('en/search/autocomplete?q=politics');
         $response->assertStatus(200);
         $response->assertHeaderPresent('Content-Type');
+    }
+
+    public function testTagPageLoadsSuccessfully(): void
+    {
+        // Tag 'bihar' is created by the seeder
+        $response = $this->get('en/tag/bihar');
+        $response->assertStatus(200);
+    }
+
+    public function testTagPageNotFoundForInvalidTag(): void
+    {
+        $this->expectException(\CodeIgniter\Exceptions\PageNotFoundException::class);
+        $this->get('en/tag/nonexistent-tag-xyz');
+    }
+
+    public function testAuthorPageLoadsSuccessfully(): void
+    {
+        // Admin user is created by the seeder
+        $response = $this->get('en/author/admin');
+        $response->assertStatus(200);
+    }
+
+    public function testAuthorPageNotFoundForInvalidUser(): void
+    {
+        $this->expectException(\CodeIgniter\Exceptions\PageNotFoundException::class);
+        $this->get('en/author/nonexistentuserxyz');
+    }
+
+    public function testThreadedCommentSubmission(): void
+    {
+        // Create a published article first
+        $articleModel = new \App\Models\ArticleModel();
+        $userModel = new \App\Models\UserModel();
+        $categoryModel = new \App\Models\CategoryModel();
+
+        $author = $userModel->where('username', 'admin')->first();
+        $category = $categoryModel->where('slug', 'politics')->first();
+
+        $articleId = $articleModel->insert([
+            'title_en'     => 'Article For Comments',
+            'title_hi'     => 'टिप्पणियों के लिए लेख',
+            'content_en'   => 'Content for comments.',
+            'content_hi'   => 'टिप्पणियों के लिए सामग्री।',
+            'slug'         => 'article-for-comments',
+            'category_id'  => $category->id,
+            'author_id'    => $author->id,
+            'language'     => 'both',
+            'news_section' => 'local',
+            'status'       => 'published',
+            'published_at' => date('Y-m-d H:i:s'),
+            'allow_comments' => 1,
+        ]);
+
+        // Submit a parent comment
+        $response = $this->post("en/comment/{$articleId}", [
+            'author_name'  => 'Commenter One',
+            'author_email' => 'commenter1@example.com',
+            'body'         => 'This is a top-level comment.',
+        ]);
+
+        $response->assertRedirect();
+
+        // Verify comment was created
+        $commentModel = new \App\Models\CommentModel();
+        $comments = $commentModel->where('article_id', $articleId)->findAll();
+        $this->assertCount(1, $comments);
+        $this->assertEquals('pending', $comments[0]->status);
+        $this->assertEquals('This is a top-level comment.', $comments[0]->body);
+
+        // Submit a reply
+        $response = $this->post("en/comment/{$articleId}", [
+            'author_name'  => 'Replier One',
+            'author_email' => 'replier1@example.com',
+            'body'         => 'This is a reply.',
+            'parent_id'    => $comments[0]->id,
+        ]);
+
+        $response->assertRedirect();
+
+        // Verify reply was created with parent_id
+        $replies = $commentModel->where('article_id', $articleId)
+                                ->where('parent_id', $comments[0]->id)
+                                ->findAll();
+        $this->assertCount(1, $replies);
+        $this->assertEquals('This is a reply.', $replies[0]->body);
+    }
+
+    public function testThreadedCommentsRetrieval(): void
+    {
+        // Create article
+        $articleModel = new \App\Models\ArticleModel();
+        $userModel = new \App\Models\UserModel();
+        $categoryModel = new \App\Models\CategoryModel();
+        $commentModel = new \App\Models\CommentModel();
+
+        $author = $userModel->where('username', 'admin')->first();
+        $category = $categoryModel->where('slug', 'politics')->first();
+
+        $articleId = $articleModel->insert([
+            'title_en'     => 'Threaded Comments Article',
+            'title_hi'     => 'थ्रेडेड टिप्पणियाँ लेख',
+            'content_en'   => 'Threaded content.',
+            'content_hi'   => 'थ्रेडेड सामग्री।',
+            'slug'         => 'threaded-comments-article',
+            'category_id'  => $category->id,
+            'author_id'    => $author->id,
+            'language'     => 'both',
+            'news_section' => 'local',
+            'status'       => 'published',
+            'published_at' => date('Y-m-d H:i:s'),
+            'allow_comments' => 1,
+        ]);
+
+        // Create parent comment
+        $parentId = $commentModel->insert([
+            'article_id'   => $articleId,
+            'author_name'  => 'Parent Commenter',
+            'author_email' => 'parent@example.com',
+            'body'         => 'Parent comment body.',
+            'status'       => 'approved',
+        ]);
+
+        // Create child comment
+        $commentModel->insert([
+            'article_id'   => $articleId,
+            'parent_id'    => $parentId,
+            'author_name'  => 'Child Commenter',
+            'author_email' => 'child@example.com',
+            'body'         => 'Child reply body.',
+            'status'       => 'approved',
+        ]);
+
+        // Get threaded comments
+        $threaded = $commentModel->getThreadedComments($articleId);
+        $this->assertCount(1, $threaded);
+        $this->assertEquals('Parent comment body.', $threaded[0]->body);
+        $this->assertNotEmpty($threaded[0]->children);
+        $this->assertCount(1, $threaded[0]->children);
+        $this->assertEquals('Child reply body.', $threaded[0]->children[0]->body);
+        $this->assertEquals($parentId, $threaded[0]->children[0]->parent_id);
     }
 
     public function testAdminCanViewNewsManagementList(): void
