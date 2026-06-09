@@ -41,8 +41,13 @@
     gtag('config', '<?= esc($gaId) ?>');
     </script>
     <?php endif; ?>
-
-    <!-- Bootstrap 5 CSS -->
+ 
+     <!-- JSON-LD Structured Data -->
+     <?php helper('jsonld'); ?>
+     <?= website_jsonld() ?>
+     <?= organization_jsonld() ?>
+ 
+     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">

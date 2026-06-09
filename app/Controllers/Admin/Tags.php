@@ -36,10 +36,21 @@ class Tags extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $tagModel->insert([
+        $tagId = $tagModel->insert([
             'name_en' => $this->request->getPost('name_en'),
             'name_hi' => $this->request->getPost('name_hi'),
             'slug'    => url_title($this->request->getPost('slug'), '-', true),
+        ]);
+
+        // Log activity
+        $activityLog = new \App\Models\ActivityLogModel();
+        $activityLog->log([
+            'user_id' => $this->getCurrentUserId(),
+            'action' => 'tag_created',
+            'entity_type' => 'tag',
+            'entity_id' => $tagId,
+            'description' => "Tag '{$this->request->getPost('name_en')}' created",
+            'ip_address' => $this->request->getIPAddress(),
         ]);
 
         return redirect()->to('/' . $this->locale . '/admin/tags')
@@ -72,6 +83,17 @@ class Tags extends BaseController
             'slug'    => url_title($this->request->getPost('slug'), '-', true),
         ]);
 
+        // Log activity
+        $activityLog = new \App\Models\ActivityLogModel();
+        $activityLog->log([
+            'user_id' => $this->getCurrentUserId(),
+            'action' => 'tag_updated',
+            'entity_type' => 'tag',
+            'entity_id' => $id,
+            'description' => "Tag '{$this->request->getPost('name_en')}' updated",
+            'ip_address' => $this->request->getIPAddress(),
+        ]);
+
         return redirect()->to('/' . $this->locale . '/admin/tags')
                        ->with('message', 'Tag updated successfully');
     }
@@ -79,7 +101,21 @@ class Tags extends BaseController
     public function delete(int $id): \CodeIgniter\HTTP\RedirectResponse
     {
         $tagModel = new TagModel();
+        $tag = $tagModel->find($id);
         $tagModel->delete($id);
+
+        // Log activity
+        if ($tag) {
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'tag_deleted',
+                'entity_type' => 'tag',
+                'entity_id' => $id,
+                'description' => "Tag '{$tag->name_en}' deleted",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+        }
 
         return redirect()->to('/' . $this->locale . '/admin/tags')
                        ->with('message', 'Tag deleted successfully');

@@ -51,9 +51,11 @@
             <li><a href="/<?= $locale ?>/admin/categories" class="<?= strpos(current_url(), '/admin/categories') !== false ? 'active' : '' ?>"><i class="bi bi-folder"></i> Categories</a></li>
             <li><a href="/<?= $locale ?>/admin/tags" class="<?= strpos(current_url(), '/admin/tags') !== false ? 'active' : '' ?>"><i class="bi bi-tags"></i> Tags</a></li>
             <li><a href="/<?= $locale ?>/admin/comments" class="<?= strpos(current_url(), '/admin/comments') !== false ? 'active' : '' ?>"><i class="bi bi-chat"></i> Comments</a></li>
+            <li><a href="/<?= $locale ?>/admin/activity" class="<?= strpos(current_url(), '/admin/activity') !== false ? 'active' : '' ?>"><i class="bi bi-activity"></i> Activity Log</a></li>
             <li><a href="/<?= $locale ?>/admin/media" class="<?= strpos(current_url(), '/admin/media') !== false ? 'active' : '' ?>"><i class="bi bi-images"></i> Media</a></li>
             <li><a href="/<?= $locale ?>/admin/users" class="<?= strpos(current_url(), '/admin/users') !== false ? 'active' : '' ?>"><i class="bi bi-people"></i> Users</a></li>
             <li><a href="/<?= $locale ?>/admin/settings" class="<?= strpos(current_url(), '/admin/settings') !== false ? 'active' : '' ?>"><i class="bi bi-gear"></i> Settings</a></li>
+            <li><a href="/<?= $locale ?>/admin/backups" class="<?= strpos(current_url(), '/admin/backups') !== false ? 'active' : '' ?>"><i class="bi bi-cloud-download"></i> Backups</a></li>
             <hr class="sidebar-divider">
             <li><a href="/<?= $locale ?>"><i class="bi bi-house"></i> View Site</a></li>
             <li><a href="/<?= $locale ?>/auth/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>

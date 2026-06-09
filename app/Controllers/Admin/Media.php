@@ -72,7 +72,7 @@ class Media extends BaseController
         }
 
         $mediaModel = new MediaModel();
-        $mediaModel->insert([
+        $mediaId = $mediaModel->insert([
             'filename'       => $file->getName(),
             'filepath'       => $filePath . '/' . $newName,
             'filetype'       => $mimeType,
@@ -82,6 +82,17 @@ class Media extends BaseController
             'thumbnail_path' => $thumbnailPath,
             'medium_path'    => $mediumPath,
             'uploaded_by'    => $this->getCurrentUserId(),
+        ]);
+
+        // Log activity
+        $activityLog = new \App\Models\ActivityLogModel();
+        $activityLog->log([
+            'user_id' => $this->getCurrentUserId(),
+            'action' => 'media_uploaded',
+            'entity_type' => 'media',
+            'entity_id' => $mediaId,
+            'description' => "File '{$file->getName()}' uploaded",
+            'ip_address' => $this->request->getIPAddress(),
         ]);
 
         return redirect()->to('/' . $this->locale . '/admin/media')
@@ -107,6 +118,17 @@ class Media extends BaseController
             }
 
             $mediaModel->delete($id);
+
+            // Log activity
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'media_deleted',
+                'entity_type' => 'media',
+                'entity_id' => $id,
+                'description' => "File '{$media['filename']}' deleted",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
         }
 
         return redirect()->to('/' . $this->locale . '/admin/media')

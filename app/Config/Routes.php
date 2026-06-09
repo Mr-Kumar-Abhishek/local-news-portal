@@ -61,6 +61,7 @@ $routes->group('{locale}', static function ($routes) {
     $routes->get('verify-email/(:any)', 'Auth::verifyEmail/$1');
     // Comment submission
     $routes->post('comment/(:num)', 'News::comment/$1');
+    $routes->post('report-comment/(:num)', 'News::reportComment/$1');
 
     // SEO - RSS Feeds
     $routes->get('rss', 'Rss::index');
@@ -124,5 +125,23 @@ $routes->group('{locale}', static function ($routes) {
         $routes->get('users/edit/(:num)', 'Admin\Users::edit/$1');
         $routes->post('users/edit/(:num)', 'Admin\Users::edit/$1');
         $routes->post('users/delete/(:num)', 'Admin\Users::delete/$1');
-    });
+
+        // Activity Log
+        $routes->get('activity', 'Admin\ActivityLog::index');
+
+        // Backups
+        $routes->get('backups', 'Admin\Backups::index');
+        $routes->post('backups/create', 'Admin\Backups::create');
+        $routes->get('backups/download/(:any)', 'Admin\Backups::download/$1');
+        $routes->post('backups/delete/(:any)', 'Admin\Backups::delete/$1');
+        });
+    
+        // ---- API Routes (no locale prefix, outside auth) ----
+        $routes->group('api', static function ($routes) {
+            $routes->get('news', 'Api\News::index');
+            $routes->get('news/(:segment)', 'Api\News::show/$1');
+            $routes->get('categories', 'Api\News::categories');
+            $routes->get('tags', 'Api\News::tags');
+            $routes->get('search', 'Api\News::search');
+        });
 });

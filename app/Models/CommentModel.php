@@ -14,7 +14,7 @@ class CommentModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'article_id', 'parent_id', 'user_id', 'author_name',
-        'author_email', 'body', 'status',
+        'author_email', 'body', 'status', 'is_reported',
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -97,6 +97,28 @@ class CommentModel extends Model
         $builder->where('comments.status', 'approved');
         $builder->orderBy('comments.created_at', 'DESC');
         $builder->limit($limit);
+
+        return $builder->get()->getResult();
+    }
+
+    /**
+     * Mark a comment as reported.
+     */
+    public function reportComment(int $id): bool
+    {
+        return (bool) $this->update($id, ['is_reported' => 1]);
+    }
+
+    /**
+     * Get all reported comments.
+     */
+    public function getReportedComments(): array
+    {
+        $builder = $this->db->table('comments');
+        $builder->select('comments.*, articles.title_en as article_title, articles.slug as article_slug');
+        $builder->join('articles', 'articles.id = comments.article_id', 'left');
+        $builder->where('comments.is_reported', 1);
+        $builder->orderBy('comments.created_at', 'DESC');
 
         return $builder->get()->getResult();
     }

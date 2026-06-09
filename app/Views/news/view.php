@@ -6,12 +6,20 @@
         </ol>
     </nav>
     <?php endif; ?>
-
+ 
+    <?php helper('jsonld'); ?>
+    <?php if (isset($breadcrumbs)): ?>
+    <?= breadcrumb_jsonld($breadcrumbs, $locale) ?>
+    <?php endif; ?>
+    <?php if (isset($article)): ?>
+    <?= article_jsonld($article, $locale) ?>
+    <?php endif; ?>
+ 
     <div class="row">
         <div class="col-md-8">
             <article class="article-content">
                 <?php if (isset($article)): ?>
-
+ 
                 <h1><?= esc($locale === 'hi' ? $article->title_hi : $article->title_en) ?></h1>
                 
                 <div class="meta mb-4">
@@ -139,6 +147,13 @@
                                data-comment-id="<?= $comment->id ?>">
                                 <i class="bi bi-reply"></i> <?= lang('News.reply') ?? 'Reply' ?>
                             </a>
+                            <form action="/<?= $locale ?>/news/report-comment/<?= $comment->id ?>" method="POST" style="display:inline;"
+                                  onsubmit="return confirm('<?= lang('News.report_confirm') ?? 'Report this comment?' ?>')">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-sm btn-link p-0 text-decoration-none text-danger ms-2" title="Report">
+                                    <i class="bi bi-flag"></i>
+                                </button>
+                            </form>
 
                             <!-- Hidden reply form -->
                             <div class="reply-form mt-2" id="reply-form-<?= $comment->id ?>" style="display: none;">

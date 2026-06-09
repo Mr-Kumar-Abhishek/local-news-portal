@@ -1,4 +1,13 @@
 <div class="container py-4">
+    <?php helper('jsonld'); ?>
+    <?= breadcrumb_jsonld([
+        ['label' => lang('News.nav_home') ?? 'Home', 'url' => '/' . $locale],
+        ['label' => lang('News.home_title') ?? 'Hind Bihar', 'url' => null],
+    ], $locale) ?>
+    <?php if (isset($latest_news)): ?>
+    <?= itemlist_jsonld($latest_news, $locale, lang('News.latest_news') ?? 'Latest News') ?>
+    <?php endif; ?>
+ 
     <!-- Featured News Carousel -->
     <?php if (isset($featured_news) && !empty($featured_news)): ?>
     <div id="featuredCarousel" class="carousel slide featured-news mb-4" data-bs-ride="carousel">

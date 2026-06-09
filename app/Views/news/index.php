@@ -1,4 +1,12 @@
 <div class="container py-4">
+    <?php helper('jsonld'); ?>
+    <?php if (isset($breadcrumbs)): ?>
+    <?= breadcrumb_jsonld($breadcrumbs, $locale) ?>
+    <?php endif; ?>
+    <?php if (isset($articles)): ?>
+    <?= itemlist_jsonld($articles, $locale, $title ?? lang('News.all_news')) ?>
+    <?php endif; ?>
+ 
     <div class="row">
         <div class="col-md-8">
             <h4 class="section-title"><?= lang('News.all_news') ?></h4>

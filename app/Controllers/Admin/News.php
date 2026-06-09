@@ -98,6 +98,17 @@ class News extends BaseController
                 $tagIds = $this->request->getPost('tags') ?? [];
                 $tagModel->syncTags($articleId, $tagIds);
 
+                // Log activity
+                $activityLog = new \App\Models\ActivityLogModel();
+                $activityLog->log([
+                    'user_id' => $this->getCurrentUserId(),
+                    'action' => 'article_created',
+                    'entity_type' => 'article',
+                    'entity_id' => $articleId,
+                    'description' => "Article '{$slug}' created",
+                    'ip_address' => $this->request->getIPAddress(),
+                ]);
+
                 return redirect()->to('/' . $this->locale . '/admin/news')
                                ->with('message', 'Article created successfully');
             }
@@ -187,6 +198,32 @@ class News extends BaseController
             $tagIds = $this->request->getPost('tags') ?? [];
             $tagModel->syncTags($id, $tagIds);
 
+            // Log activity
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'article_updated',
+                'entity_type' => 'article',
+                'entity_id' => $id,
+                'description' => "Article '{$slug}' updated",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+
+            // If article status changed to pending, notify admins
+            if ($status === 'pending' && $article->status !== 'pending') {
+                $userModel = new \App\Models\UserModel();
+                $admins = $userModel->where('role', 'admin')->where('status', 1)->findAll();
+                $articleTitle = $this->request->getPost('title_en');
+                foreach ($admins as $admin) {
+                    $message = view('email/article_pending', [
+                        'article_title' => $articleTitle,
+                        'article_id' => $id,
+                        'locale' => $this->locale,
+                    ]);
+                    send_email($admin->email, 'Article Pending Review: ' . $articleTitle, $message);
+                }
+            }
+
             return redirect()->to('/' . $this->locale . '/admin/news')
                            ->with('message', 'Article updated successfully');
         }
@@ -199,7 +236,21 @@ class News extends BaseController
     public function delete(int $id): \CodeIgniter\HTTP\RedirectResponse
     {
         $articleModel = new ArticleModel();
+        $article = $articleModel->find($id);
         $articleModel->delete($id);
+
+        // Log activity
+        if ($article) {
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'article_deleted',
+                'entity_type' => 'article',
+                'entity_id' => $id,
+                'description' => "Article '{$article->title_en}' deleted",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+        }
 
         return redirect()->to('/' . $this->locale . '/admin/news')
                        ->with('message', 'Article deleted successfully');
@@ -224,8 +275,22 @@ class News extends BaseController
     public function approve(int $id): \CodeIgniter\HTTP\RedirectResponse
     {
         $articleModel = new ArticleModel();
+        $article = $articleModel->find($id);
 
         $articleModel->approveArticle($id, (int) $this->getCurrentUserId());
+
+        // Log activity
+        if ($article) {
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'article_approved',
+                'entity_type' => 'article',
+                'entity_id' => $id,
+                'description' => "Article '{$article->title_en}' approved",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+        }
 
         return redirect()->to('/' . $this->locale . '/admin/news')
                        ->with('message', 'Article approved successfully');
@@ -234,8 +299,22 @@ class News extends BaseController
     public function publish(int $id): \CodeIgniter\HTTP\RedirectResponse
     {
         $articleModel = new ArticleModel();
+        $article = $articleModel->find($id);
 
         $articleModel->publishArticle($id);
+
+        // Log activity
+        if ($article) {
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'article_published',
+                'entity_type' => 'article',
+                'entity_id' => $id,
+                'description' => "Article '{$article->title_en}' published",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+        }
 
         return redirect()->to('/' . $this->locale . '/admin/news')
                        ->with('message', 'Article published successfully');

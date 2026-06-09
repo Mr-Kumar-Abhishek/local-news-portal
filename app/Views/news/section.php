@@ -6,7 +6,15 @@
         </ol>
     </nav>
     <?php endif; ?>
-
+ 
+    <?php helper('jsonld'); ?>
+    <?php if (isset($breadcrumbs)): ?>
+    <?= breadcrumb_jsonld($breadcrumbs, $locale) ?>
+    <?php endif; ?>
+    <?php if (isset($articles)): ?>
+    <?= itemlist_jsonld($articles, $locale, $section_name ?? 'Section') ?>
+    <?php endif; ?>
+ 
     <div class="row">
         <div class="col-md-8">
             <h4 class="section-title"><?= esc($section_name ?? lang('News.all_news')) ?></h4>

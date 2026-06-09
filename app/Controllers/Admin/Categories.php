@@ -47,13 +47,24 @@ class Categories extends BaseController
                      . view('admin/templates/footer');
             }
 
-            $categoryModel->insert([
+            $categoryId = $categoryModel->insert([
                 'name_en'     => $this->request->getPost('name_en'),
                 'name_hi'     => $this->request->getPost('name_hi'),
                 'slug'        => url_title($this->request->getPost('slug'), '-', true),
                 'description' => $this->request->getPost('description'),
                 'parent_id'   => $this->request->getPost('parent_id') ?: null,
                 'status'      => $this->request->getPost('status') ?? 1,
+            ]);
+
+            // Log activity
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'category_created',
+                'entity_type' => 'category',
+                'entity_id' => $categoryId,
+                'description' => "Category '{$this->request->getPost('name_en')}' created",
+                'ip_address' => $this->request->getIPAddress(),
             ]);
 
             return redirect()->to('/' . $this->locale . '/admin/categories')
@@ -106,6 +117,17 @@ class Categories extends BaseController
                 'status'      => $this->request->getPost('status') ?? 1,
             ]);
 
+            // Log activity
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'category_updated',
+                'entity_type' => 'category',
+                'entity_id' => $id,
+                'description' => "Category '{$this->request->getPost('name_en')}' updated",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+
             return redirect()->to('/' . $this->locale . '/admin/categories')
                            ->with('message', 'Category updated successfully');
         }
@@ -118,7 +140,21 @@ class Categories extends BaseController
     public function delete(int $id): \CodeIgniter\HTTP\RedirectResponse
     {
         $categoryModel = new CategoryModel();
+        $category = $categoryModel->find($id);
         $categoryModel->delete($id);
+
+        // Log activity
+        if ($category) {
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'category_deleted',
+                'entity_type' => 'category',
+                'entity_id' => $id,
+                'description' => "Category '{$category->name_en}' deleted",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+        }
 
         return redirect()->to('/' . $this->locale . '/admin/categories')
                        ->with('message', 'Category deleted successfully');

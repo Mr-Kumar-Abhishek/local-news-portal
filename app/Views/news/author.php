@@ -6,7 +6,15 @@
         </ol>
     </nav>
     <?php endif; ?>
-
+ 
+    <?php helper('jsonld'); ?>
+    <?php if (isset($breadcrumbs)): ?>
+    <?= breadcrumb_jsonld($breadcrumbs, $locale) ?>
+    <?php endif; ?>
+    <?php if (isset($articles)): ?>
+    <?= itemlist_jsonld($articles, $locale, $display_name ?? 'Author') ?>
+    <?php endif; ?>
+ 
     <div class="row">
         <div class="col-md-8">
             <?php if (isset($author)): ?>

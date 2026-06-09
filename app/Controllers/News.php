@@ -325,9 +325,45 @@ class News extends BaseController
             $data['parent_id'] = (int) $parentId;
         }
 
-        $this->commentModel->insert($data);
+        $commentId = $this->commentModel->insert($data);
+
+        // Send notification to article author
+        $article = $this->articleModel->find($articleId);
+        if ($article && !empty($article->author_id)) {
+            $author = $this->userModel->find($article->author_id);
+            if ($author && !empty($author->email)) {
+                $message = view('email/comment_notification', [
+                    'article_title' => $this->locale === 'hi' ? $article->title_hi : $article->title_en,
+                    'article_slug' => $article->slug,
+                    'comment_author' => $data['author_name'] ?? 'Anonymous',
+                    'comment_body' => $data['body'],
+                    'locale' => $this->locale,
+                ]);
+                send_email($author->email, 'New Comment: ' . ($this->locale === 'hi' ? $article->title_hi : $article->title_en), $message);
+            }
+        }
+
+        // Send notification to admin
+        $adminUsers = $this->userModel->where('role', 'admin')->where('status', 1)->findAll();
+        foreach ($adminUsers as $admin) {
+            $message = view('email/comment_notification', [
+                'article_title' => $this->locale === 'hi' ? $article->title_hi : $article->title_en,
+                'article_slug' => $article->slug,
+                'comment_author' => $data['author_name'] ?? 'Anonymous',
+                'comment_body' => $data['body'],
+                'locale' => $this->locale,
+            ]);
+            send_email($admin->email, 'New Comment: ' . ($this->locale === 'hi' ? $article->title_hi : $article->title_en), $message);
+        }
 
         return redirect()->back()->with('message', lang('News.comment_success'));
+    }
+
+    public function reportComment(int $commentId): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $this->commentModel->reportComment($commentId);
+
+        return redirect()->back()->with('message', lang('News.comment_reported'));
     }
 
     protected function generatePagination(int $total, int $currentPage): array

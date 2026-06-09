@@ -4,6 +4,9 @@
         <a href="<?= current_url() ?>?status=pending" class="btn btn-outline-warning btn-sm <?= ($status ?? '') === 'pending' ? 'active' : '' ?>">
             <i class="bi bi-exclamation-circle"></i> Pending (<?= esc($pending_count ?? 0) ?>)
         </a>
+        <a href="<?= current_url() ?>?status=reported" class="btn btn-outline-danger btn-sm <?= ($status ?? '') === 'reported' ? 'active' : '' ?>">
+            <i class="bi bi-flag"></i> Reported
+        </a>
         <a href="<?= current_url() ?>?status=approved" class="btn btn-outline-success btn-sm <?= ($status ?? '') === 'approved' ? 'active' : '' ?>">
             <i class="bi bi-check-circle"></i> Approved
         </a>
@@ -86,6 +89,9 @@
                                 </small>
                             </td>
                             <td>
+                                <?php if (!empty($comment['is_reported'])) : ?>
+                                    <span class="badge bg-danger me-1" title="Reported"><i class="bi bi-flag-fill"></i></span>
+                                <?php endif; ?>
                                 <?php if ($comment['status'] === 'approved') : ?>
                                     <span class="badge bg-success">Approved</span>
                                 <?php elseif ($comment['status'] === 'pending') : ?>

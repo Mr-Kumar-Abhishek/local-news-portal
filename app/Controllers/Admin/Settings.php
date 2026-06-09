@@ -35,6 +35,17 @@ class Settings extends BaseController
                 }
             }
 
+            // Log activity
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'settings_saved',
+                'entity_type' => 'setting',
+                'entity_id' => null,
+                'description' => 'Site settings saved',
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+
             return redirect()->to('/' . $this->locale . '/admin/settings')
                            ->with('message', 'Settings saved successfully');
         }

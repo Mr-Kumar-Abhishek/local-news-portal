@@ -6,7 +6,16 @@
         </ol>
     </nav>
     <?php endif; ?>
-
+ 
+    <?php helper('jsonld'); ?>
+    <?php if (isset($breadcrumbs)): ?>
+    <?= breadcrumb_jsonld($breadcrumbs, $locale) ?>
+    <?php endif; ?>
+    <?= searchaction_jsonld() ?>
+    <?php if (isset($articles)): ?>
+    <?= itemlist_jsonld($articles, $locale, $query ? lang('News.search_results') . ': ' . esc($query) : (lang('News.search') ?? 'Search')) ?>
+    <?php endif; ?>
+ 
     <div class="row">
         <!-- Filters Sidebar -->
         <div class="col-md-3 order-md-1 mb-4">

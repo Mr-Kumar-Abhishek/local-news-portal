@@ -52,13 +52,24 @@ class Users extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $userModel->insert([
+        $userId = $userModel->insert([
             'username'  => $this->request->getPost('username'),
             'email'     => $this->request->getPost('email'),
             'password'  => $this->request->getPost('password'),
             'full_name' => $this->request->getPost('full_name'),
             'role'      => $this->request->getPost('role'),
             'status'    => $this->request->getPost('status') ?? 'active',
+        ]);
+
+        // Log activity
+        $activityLog = new \App\Models\ActivityLogModel();
+        $activityLog->log([
+            'user_id' => $this->getCurrentUserId(),
+            'action' => 'user_created',
+            'entity_type' => 'user',
+            'entity_id' => $userId,
+            'description' => "User '{$this->request->getPost('username')}' created",
+            'ip_address' => $this->request->getIPAddress(),
         ]);
 
         return redirect()->to('/' . $this->locale . '/admin/users')
@@ -97,6 +108,17 @@ class Users extends BaseController
 
             $userModel->update($id, $updateData);
 
+            // Log activity
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'user_updated',
+                'entity_type' => 'user',
+                'entity_id' => $id,
+                'description' => "User '{$user->username}' updated",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+
             return redirect()->to('/' . $this->locale . '/admin/users')
                            ->with('message', 'User updated successfully');
         }
@@ -109,7 +131,21 @@ class Users extends BaseController
     public function delete(int $id): \CodeIgniter\HTTP\RedirectResponse
     {
         $userModel = new UserModel();
+        $user = $userModel->find($id);
         $userModel->delete($id);
+
+        // Log activity
+        if ($user) {
+            $activityLog = new \App\Models\ActivityLogModel();
+            $activityLog->log([
+                'user_id' => $this->getCurrentUserId(),
+                'action' => 'user_deleted',
+                'entity_type' => 'user',
+                'entity_id' => $id,
+                'description' => "User '{$user->username}' deleted",
+                'ip_address' => $this->request->getIPAddress(),
+            ]);
+        }
 
         return redirect()->to('/' . $this->locale . '/admin/users')
                        ->with('message', 'User deleted successfully');
