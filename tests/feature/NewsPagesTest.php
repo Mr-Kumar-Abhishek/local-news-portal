@@ -90,7 +90,7 @@ final class NewsPagesTest extends CIUnitTestCase
             'title_hi'     => 'टिप्पणियों के लिए लेख',
             'content_en'   => 'Content for comments.',
             'content_hi'   => 'टिप्पणियों के लिए सामग्री।',
-            'slug'         => 'article-for-comments',
+            'slug'         => 'article-for-comments-' . uniqid(),
             'category_id'  => $category->id,
             'author_id'    => $author->id,
             'language'     => 'both',
@@ -100,11 +100,15 @@ final class NewsPagesTest extends CIUnitTestCase
             'allow_comments' => 1,
         ]);
 
-        // Submit a parent comment
-        $response = $this->post("en/comment/{$articleId}", [
-            'author_name'  => 'Commenter One',
-            'author_email' => 'commenter1@example.com',
-            'body'         => 'This is a top-level comment.',
+        $this->assertIsInt($articleId, 'Article insert should return integer ID');
+
+        // CAPTCHA: set session answer via withSession() so the guest comment passes validation.
+        // session()->set() does not carry into the request context in CI4's test environment.
+        $response = $this->withSession(['captcha_answer' => 15])->post("en/comment/{$articleId}", [
+            'author_name'    => 'Commenter One',
+            'author_email'   => 'commenter1@example.com',
+            'body'           => 'This is a top-level comment.',
+            'captcha_answer' => 15,
         ]);
 
         $response->assertRedirect();
@@ -116,12 +120,13 @@ final class NewsPagesTest extends CIUnitTestCase
         $this->assertEquals('pending', $comments[0]->status);
         $this->assertEquals('This is a top-level comment.', $comments[0]->body);
 
-        // Submit a reply
-        $response = $this->post("en/comment/{$articleId}", [
-            'author_name'  => 'Replier One',
-            'author_email' => 'replier1@example.com',
-            'body'         => 'This is a reply.',
-            'parent_id'    => $comments[0]->id,
+        // CAPTCHA: re-set session answer via withSession() (cleared after first successful comment)
+        $response = $this->withSession(['captcha_answer' => 15])->post("en/comment/{$articleId}", [
+            'author_name'    => 'Replier One',
+            'author_email'   => 'replier1@example.com',
+            'body'           => 'This is a reply.',
+            'parent_id'      => $comments[0]->id,
+            'captcha_answer' => 15,
         ]);
 
         $response->assertRedirect();
