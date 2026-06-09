@@ -17,6 +17,8 @@ final class MediaTest extends CIUnitTestCase
 
     protected $migrate     = true;
     protected $migrateOnce = true;
+    protected $refresh      = false;
+    protected $seedOnce     = true;
     protected $namespace   = null;
     protected $seed        = HindBiharSeeder::class;
 
