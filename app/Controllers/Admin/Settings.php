@@ -23,6 +23,9 @@ class Settings extends BaseController
                 'site_keywords', 'site_logo', 'site_favicon', 'facebook_url', 'twitter_url',
                 'instagram_url', 'youtube_url', 'footer_text_en', 'footer_text_hi',
                 'posts_per_page', 'maintenance_mode',
+                // SEO Settings
+                'meta_title', 'seo_meta_description', 'seo_meta_keywords',
+                'seo_google_analytics_id', 'og_image_url', 'twitter_handle',
             ];
 
             foreach ($allowedKeys as $key) {

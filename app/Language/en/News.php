@@ -71,6 +71,9 @@ return [
     'no_comments'           => 'No comments yet.',
     'name'                  => 'Name',
     'email'                 => 'Email',
+    'captcha_question'      => 'What is',
+    'captcha_spam'          => 'Spam protection',
+    'captcha_wrong'         => 'Incorrect CAPTCHA answer. Please try again.',
 
     // Auth
     'login_title'           => 'Login',

@@ -4,6 +4,21 @@ namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 
+/**
+ * Email Configuration
+ *
+ * For development, PHP mail() is used as the default protocol.
+ * For production, switch to SMTP by setting:
+ *
+ *   public string $protocol = 'smtp';
+ *
+ * And fill in your SMTP credentials below (SMTPHost, SMTPUser, SMTPPass, SMTPPort).
+ * Typical settings for common providers:
+ *
+ *   Gmail:     SMTPHost='smtp.gmail.com',   SMTPPort=587, SMTPCrypto='tls'
+ *   SendGrid:  SMTPHost='smtp.sendgrid.net', SMTPPort=587, SMTPCrypto='tls'
+ *   Mailgun:   SMTPHost='smtp.mailgun.org',  SMTPPort=587, SMTPCrypto='tls'
+ */
 class Email extends BaseConfig
 {
     public string $fromEmail  = '';

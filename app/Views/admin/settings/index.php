@@ -145,6 +145,58 @@
         </div>
     </div>
 
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0">SEO Settings</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="meta_title" class="form-label">Default Meta Title</label>
+                    <input type="text" name="meta_title" id="meta_title" class="form-control"
+                           value="<?= old('meta_title', $settings['meta_title'] ?? 'Hind Bihar') ?>"
+                           placeholder="Default page title suffix">
+                    <small class="text-muted">Used as fallback when a page has no specific title.</small>
+                </div>
+                <div class="col-md-6">
+                    <label for="seo_meta_description" class="form-label">Default Meta Description</label>
+                    <input type="text" name="seo_meta_description" id="seo_meta_description" class="form-control"
+                           value="<?= old('seo_meta_description', $settings['seo_meta_description'] ?? '') ?>"
+                           placeholder="Default SEO meta description">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="seo_meta_keywords" class="form-label">Default Meta Keywords</label>
+                    <input type="text" name="seo_meta_keywords" id="seo_meta_keywords" class="form-control"
+                           value="<?= old('seo_meta_keywords', $settings['seo_meta_keywords'] ?? '') ?>"
+                           placeholder="Comma-separated default keywords">
+                </div>
+                <div class="col-md-6">
+                    <label for="seo_google_analytics_id" class="form-label">Google Analytics Tracking ID</label>
+                    <input type="text" name="seo_google_analytics_id" id="seo_google_analytics_id" class="form-control"
+                           value="<?= old('seo_google_analytics_id', $settings['seo_google_analytics_id'] ?? '') ?>"
+                           placeholder="G-XXXXXXXXXX or UA-XXXXXXXXX-X">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="og_image_url" class="form-label">Default OG Image URL</label>
+                    <input type="url" name="og_image_url" id="og_image_url" class="form-control"
+                           value="<?= old('og_image_url', $settings['og_image_url'] ?? '') ?>"
+                           placeholder="https://example.com/images/og-default.jpg">
+                    <small class="text-muted">Fallback Open Graph image for pages without a featured image.</small>
+                </div>
+                <div class="col-md-6">
+                    <label for="twitter_handle" class="form-label">Twitter Handle</label>
+                    <input type="text" name="twitter_handle" id="twitter_handle" class="form-control"
+                           value="<?= old('twitter_handle', $settings['twitter_handle'] ?? '') ?>"
+                           placeholder="@username">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="d-flex justify-content-between mb-4">
         <a href="<?= site_url($locale . '/admin/dashboard') ?>" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Back to Dashboard

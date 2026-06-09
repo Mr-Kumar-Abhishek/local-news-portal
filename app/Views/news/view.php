@@ -158,6 +158,14 @@
                                     <div class="mb-2">
                                         <textarea name="body" class="form-control form-control-sm" rows="2" placeholder="<?= lang('News.your_comment') ?>" required></textarea>
                                     </div>
+                                    <?php if (!session()->has('user_id') && isset($captcha_num1, $captcha_num2)): ?>
+                                    <div class="mb-2">
+                                        <label class="form-label small">
+                                            <?= lang('News.captcha_question') ?? 'What is' ?> <?= $captcha_num1 ?> + <?= $captcha_num2 ?>? (<?= lang('News.captcha_spam') ?? 'Spam protection' ?>)
+                                        </label>
+                                        <input type="number" name="captcha_answer" class="form-control form-control-sm" required style="max-width: 120px;">
+                                    </div>
+                                    <?php endif; ?>
                                     <button type="submit" class="btn btn-primary btn-sm"><?= lang('News.submit') ?></button>
                                     <button type="button" class="btn btn-secondary btn-sm reply-cancel" data-comment-id="<?= $comment->id ?>"><?= lang('News.cancel') ?? 'Cancel' ?></button>
                                 </form>
@@ -202,6 +210,14 @@
                             <div class="mb-3">
                                 <textarea name="body" class="form-control" rows="4" placeholder="<?= lang('News.your_comment') ?>" required></textarea>
                             </div>
+                            <?php if (!session()->has('user_id') && isset($captcha_num1, $captcha_num2)): ?>
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <?= lang('News.captcha_question') ?? 'What is' ?> <?= $captcha_num1 ?> + <?= $captcha_num2 ?>? (<?= lang('News.captcha_spam') ?? 'Spam protection' ?>)
+                                </label>
+                                <input type="number" name="captcha_answer" class="form-control" required style="max-width: 150px;">
+                            </div>
+                            <?php endif; ?>
                             <button type="submit" class="btn btn-primary"><?= lang('News.submit') ?></button>
                         </form>
                     </div>

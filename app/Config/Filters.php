@@ -79,7 +79,7 @@ class Filters extends BaseFilters
             // 'honeypot',
             // 'csrf', // Disabled globally; CSRF is handled via Security config redirect=false in non-production
             // 'invalidchars',
-            // 'throttle', // Disabled in testing
+            'throttle',
         ],
         'after' => [
             // 'honeypot',

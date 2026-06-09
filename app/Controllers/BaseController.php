@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 
 abstract class BaseController extends Controller
 {
-    protected $helpers = ['url', 'form', 'text', 'breadcrumb'];
+    protected $helpers = ['url', 'form', 'text', 'breadcrumb', 'email'];
 
     protected string $locale = 'en';
 
@@ -24,9 +24,13 @@ abstract class BaseController extends Controller
 
         if (in_array($localeFromUrl, ['en', 'hi'])) {
             $this->locale = $localeFromUrl;
+            // Persist preference in session
+            session()->set('lang', $this->locale);
         } else {
-            // Fallback: check session or default
-            $this->locale = session()->get('lang') ?? $this->locale;
+            // Fallback: check session, then cookie, then default
+            $this->locale = session()->get('lang')
+                ?? $request->getCookie('user_language')
+                ?? $this->locale;
         }
 
         // Set locale for language service

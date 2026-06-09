@@ -14,17 +14,33 @@
     <meta property="og:url" content="<?= current_url() ?>">
     <?php if (isset($article) && $article->featured_image): ?>
     <meta property="og:image" content="<?= base_url($article->featured_image) ?>">
+    <?php elseif ($ogImage = model('App\Models\SettingModel')->getSetting('og_image_url')): ?>
+    <meta property="og:image" content="<?= esc($ogImage) ?>">
     <?php endif; ?>
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= esc($title ?? 'Hind Bihar') ?>">
+    <?php if ($twitterHandle = model('App\Models\SettingModel')->getSetting('twitter_handle')): ?>
+    <meta name="twitter:site" content="<?= esc($twitterHandle) ?>">
+    <?php endif; ?>
 
     <!-- Canonical -->
     <link rel="canonical" href="<?= current_url() ?>">
 
     <!-- RSS Feed -->
     <link rel="alternate" type="application/rss+xml" title="Hind Bihar RSS Feed" href="<?= base_url('/rss') ?>">
+
+    <!-- Google Analytics -->
+    <?php if ($gaId = model('App\Models\SettingModel')->getSetting('seo_google_analytics_id')): ?>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?= esc($gaId) ?>"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '<?= esc($gaId) ?>');
+    </script>
+    <?php endif; ?>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -518,6 +534,19 @@
             }
         }
     </style>
+    <script>
+    // Language preference persistence via cookie (30-day expiry)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.lang-switch').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                var lang = this.getAttribute('data-lang');
+                var d = new Date();
+                d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days
+                document.cookie = 'user_language=' + lang + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
+            });
+        });
+    });
+    </script>
 </head>
 <body>
     <!-- Top Bar -->
@@ -528,8 +557,8 @@
                     <span id="current-date"></span>
                 </div>
                 <div class="col-md-6 text-end">
-                    <a href="/en" class="me-3 <?= $locale === 'en' ? 'fw-bold text-white' : '' ?>">English</a>
-                    <a href="/hi" class="<?= $locale === 'hi' ? 'fw-bold text-white' : '' ?>">हिन्दी</a>
+                    <a href="/en" class="me-3 lang-switch <?= $locale === 'en' ? 'fw-bold text-white' : '' ?>" data-lang="en">English</a>
+                    <a href="/hi" class="lang-switch <?= $locale === 'hi' ? 'fw-bold text-white' : '' ?>" data-lang="hi">हिन्दी</a>
                 </div>
             </div>
         </div>

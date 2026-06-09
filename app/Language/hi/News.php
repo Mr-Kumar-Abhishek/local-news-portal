@@ -105,6 +105,9 @@ return [
     'no_comments'           => 'अभी तक कोई टिप्पणी नहीं।',
     'name'                  => 'नाम',
     'email'                 => 'ईमेल',
+    'captcha_question'      => 'कितना होता है',
+    'captcha_spam'          => 'स्पैम सुरक्षा',
+    'captcha_wrong'         => 'गलत कैप्चा उत्तर। कृपया पुनः प्रयास करें।',
 
     // Auth
     'login_title'           => 'लॉगिन',

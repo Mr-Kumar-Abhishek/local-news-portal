@@ -58,9 +58,9 @@ class ThrottleFilter implements FilterInterface
         // Get client IP
         $ip = $request->getIPAddress();
 
-        // Build cache key: throttle:{ip}:{minute_window}
+        // Build cache key: throttle_{ip}_{minute_window}
         $minuteWindow = (int) floor(time() / $this->timeWindow);
-        $cacheKey = 'throttle:' . md5($ip) . ':' . $minuteWindow;
+        $cacheKey = 'throttle_' . md5($ip) . '_' . $minuteWindow;
 
         $cache = service('cache');
         $requestCount = (int) $cache->get($cacheKey);

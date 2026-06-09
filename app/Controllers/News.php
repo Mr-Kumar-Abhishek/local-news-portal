@@ -93,18 +93,25 @@ class News extends BaseController
 
         $breadcrumbs[] = ['label' => $articleTitle, 'url' => null];
 
+        // Generate math CAPTCHA for guest commenters
+        $captcha_num1 = rand(1, 10);
+        $captcha_num2 = rand(1, 10);
+        session()->set('captcha_answer', $captcha_num1 + $captcha_num2);
+
         $data = [
-            'article'     => $article,
-            'tags'        => $tags,
-            'comments'    => $comments,
-            'related'     => $related,
-            'categories'  => $this->categoryModel->getActiveCategories(),
-            'tags_sidebar' => $this->tagModel->getPopularTags(10),
-            'popular'     => $this->articleModel->getPopularArticles(5),
-            'locale'      => $this->locale,
-            'title'       => $articleTitle,
+            'article'       => $article,
+            'tags'          => $tags,
+            'comments'      => $comments,
+            'related'       => $related,
+            'categories'    => $this->categoryModel->getActiveCategories(),
+            'tags_sidebar'  => $this->tagModel->getPopularTags(10),
+            'popular'       => $this->articleModel->getPopularArticles(5),
+            'locale'        => $this->locale,
+            'title'         => $articleTitle,
             'meta_description' => $this->locale === 'hi' ? $article->excerpt_hi : $article->excerpt_en,
-            'breadcrumbs' => $breadcrumbs,
+            'breadcrumbs'   => $breadcrumbs,
+            'captcha_num1'  => $captcha_num1,
+            'captcha_num2'  => $captcha_num2,
         ];
 
         return view('templates/header', $data)
@@ -281,6 +288,19 @@ class News extends BaseController
 
     public function comment(int $articleId): \CodeIgniter\HTTP\RedirectResponse
     {
+        // CAPTCHA validation for guests only
+        if (!$this->isLoggedIn()) {
+            $captchaAnswer = $this->request->getPost('captcha_answer');
+            $expectedAnswer = session()->get('captcha_answer');
+
+            if ($captchaAnswer === null || (int) $captchaAnswer !== (int) $expectedAnswer) {
+                return redirect()->back()->withInput()->with('error', lang('News.captcha_wrong') ?? 'Incorrect CAPTCHA answer. Please try again.');
+            }
+
+            // Clear the CAPTCHA answer so it cannot be reused
+            session()->remove('captcha_answer');
+        }
+
         $rules = [
             'author_name'  => 'permit_empty|max_length[100]',
             'author_email' => 'permit_empty|valid_email|max_length[100]',

@@ -119,7 +119,13 @@ class Auth extends BaseController
                 'verification_token' => $token,
             ]);
 
-            log_message('info', 'Verification Link for ' . $this->request->getPost('email') . ': ' . site_url($this->locale . '/verify-email/' . $token));
+            // Send verification email
+            $verificationLink = site_url($this->locale . '/verify-email/' . $token);
+            $emailBody = view('email/verification', [
+                'title'             => 'Email Verification - Hind Bihar',
+                'verification_link' => $verificationLink,
+            ]);
+            send_email($this->request->getPost('email'), 'Verify Your Email - Hind Bihar', $emailBody);
 
             return redirect()->to('/' . $this->locale . '/login')
                             ->with('message', lang('News.register_success'));
@@ -189,7 +195,13 @@ class Auth extends BaseController
                 'reset_expires_at' => $expires,
             ]);
 
-            log_message('info', 'Password Reset Link for ' . $email . ': ' . site_url($this->locale . '/reset-password/' . $token));
+            // Send password reset email
+            $resetLink = site_url($this->locale . '/reset-password/' . $token);
+            $emailBody = view('email/password_reset', [
+                'title'     => 'Password Reset - Hind Bihar',
+                'reset_link' => $resetLink,
+            ]);
+            send_email($email, 'Password Reset Request - Hind Bihar', $emailBody);
 
             return view('templates/header', $data)
                  . view('auth/forgot_password', ['message' => lang('News.reset_link_sent'), 'locale' => $this->locale])
