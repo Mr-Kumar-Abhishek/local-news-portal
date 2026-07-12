@@ -174,6 +174,7 @@ For further technical reading, please refer to the following documents in the re
 - **[SRS.md](SRS.md)**: Software Requirements Specification containing detailed system features, use cases, and functional specifications.
 - **[DESIGN.md](DESIGN.md)**: Software Design Document detailing the system design, Entity-Relationship diagrams, detailed table schemas, and routing schemes.
 - **[AGILE_PLAN.md](AGILE_PLAN.md)**: Agile Project Management Plan listing the project roadmap, sprint schedules, epics, and user stories.
+- **[COCOMO.md](COCOMO.md)**: Constructive Cost Model (COCOMO) calculation detailing the estimated effort and time required to develop this CodeIgniter project.
 
 ---
 
