@@ -52,3 +52,20 @@ Used for complex projects with highly rigid constraints and requirements (hardwa
 | **Embedded** | 127.24 Person-Months | 11.79 Months | ~11 Developers | **₹1,27,24,000** |
 
 *\*Assumes an average developer cost of ₹1,00,000 per month.*
+
+## Agile Implementation Cost Breakdown
+
+Based on the `AGILE_PLAN.md`, the project consists of 6 Sprints totaling **237 Story Points (SP)**. Since the current codebase reflects the full implementation of these Sprints, the total estimated costs above map perfectly to these 237 points. 
+
+Below is the sprint-by-sprint cumulative cost breakdown for the **Organic Mode** (Cost per SP: ~₹22,920):
+
+| Sprint | Story Points | Sprint Cost | Cumulative Cost |
+| :--- | :--- | :--- | :--- |
+| **Sprint 1** | 35 SP | ₹8,02,194 | **₹8,02,194** |
+| **Sprint 2** | 39 SP | ₹8,93,873 | **₹16,96,068** |
+| **Sprint 3** | 41 SP | ₹9,39,713 | **₹26,35,781** |
+| **Sprint 4** | 40 SP | ₹9,16,793 | **₹35,52,574** |
+| **Sprint 5** | 41 SP | ₹9,39,713 | **₹44,92,287** |
+| **Sprint 6** | 41 SP | ₹9,39,713 | **₹54,32,000** |
+
+*(Note: If calculated using Semi-Detached or Embedded mode, the proportional cost per sprint scales up accordingly relative to the totals above).*
