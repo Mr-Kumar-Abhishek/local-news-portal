@@ -52,11 +52,6 @@ jobs:
       - name: PHP Syntax Check
         run: find app tests -name "*.php" -exec php -l {} \; 2>&1 | grep -v "No syntax errors" || true
 
-      - name: Run Migrations
-        run: php spark migrate --all
-
-      - name: Run Seeder
-        run: php spark db:seed HindBiharSeeder
 
       - name: Run PHPUnit
         run: php vendor/bin/phpunit --no-coverage
