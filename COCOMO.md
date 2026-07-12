@@ -9,53 +9,46 @@ Based on the analysis of the `app`, `public`, and `tests` directories (excluding
 - **Total Lines of Code (LOC):** 19,510
 - **Kilo Lines of Code (KLOC):** 19.51
 
-## Estimation Model
+## Estimation Models & Cost Calculation
 
-For this project, we are using the **Basic COCOMO Model** in the **Organic Mode**, as this is a relatively small to medium-sized project developed by a familiar team with relaxed requirements.
+The Basic COCOMO model provides estimations for three different types of projects: **Organic**, **Semi-detached**, and **Embedded**. 
 
-The constants for the Organic Mode are:
-- **a** = 2.4
-- **b** = 1.05
-- **c** = 2.5
-- **d** = 0.38
+To calculate the estimated cost in Indian Rupees (INR), we are assuming an average developer salary of **₹1,00,000 per month**. 
+*(Cost = Effort × Average Salary per Person-Month)*
 
-### Formulas
+### 1. Organic Mode
+Used for relatively small, simple software projects where small teams with good experience work with less rigid requirements.
 
-- **Effort (E):** `a * (KLOC)^b` (Person-Months)
-- **Development Time (D):** `c * (E)^d` (Months)
-- **Average Staffing (S):** `E / D` (Persons)
+- **Constants:** `a = 2.4`, `b = 1.05`, `c = 2.5`, `d = 0.38`
+- **Effort (E):** `2.4 * (19.51)^1.05` = **54.32 Person-Months**
+- **Development Time (D):** `2.5 * (54.32)^0.38` = **11.41 Months**
+- **Average Staffing:** `54.32 / 11.41` = **~5 Persons**
+- **Estimated Cost (INR):** `54.32 * ₹1,00,000` = **₹54,32,000** (Fifty-four lakhs thirty-two thousand rupees)
 
-## Calculations
+### 2. Semi-Detached Mode
+Used for medium-sized projects with mixed teams (some experienced, some inexperienced) and moderately rigid requirements.
 
-**1. Effort Calculation:**
-```text
-E = 2.4 * (19.51)^1.05
-E = 2.4 * 22.86
-E ≈ 54.86 Person-Months
-```
-This means it would take approximately 55 person-months of effort to develop this project from scratch.
+- **Constants:** `a = 3.0`, `b = 1.12`, `c = 2.5`, `d = 0.35`
+- **Effort (E):** `3.0 * (19.51)^1.12` = **83.60 Person-Months**
+- **Development Time (D):** `2.5 * (83.60)^0.35` = **11.77 Months**
+- **Average Staffing:** `83.60 / 11.77` = **~7 Persons**
+- **Estimated Cost (INR):** `83.60 * ₹1,00,000` = **₹83,60,000** (Eighty-three lakhs sixty thousand rupees)
 
-**2. Development Time Calculation:**
-```text
-D = 2.5 * (54.86)^0.38
-D = 2.5 * 4.54
-D ≈ 11.35 Months
-```
-The estimated time required to complete the project is about 11.35 months.
+### 3. Embedded Mode
+Used for complex projects with highly rigid constraints and requirements (hardware, software, operational). 
 
-**3. Average Staffing Calculation:**
-```text
-S = 54.86 / 11.35
-S ≈ 4.83 Persons
-```
-An optimal team size for this project would be around 5 developers.
+- **Constants:** `a = 3.6`, `b = 1.20`, `c = 2.5`, `d = 0.32`
+- **Effort (E):** `3.6 * (19.51)^1.20` = **127.24 Person-Months**
+- **Development Time (D):** `2.5 * (127.24)^0.32` = **11.79 Months**
+- **Average Staffing:** `127.24 / 11.79` = **~11 Persons**
+- **Estimated Cost (INR):** `127.24 * ₹1,00,000` = **₹1,27,24,000** (One crore twenty-seven lakhs twenty-four thousand rupees)
 
-## Summary
+## Summary Table
 
-| Metric | Estimated Value |
-| :--- | :--- |
-| **Effort** | ~54.86 Person-Months |
-| **Development Time** | ~11.35 Months |
-| **Average Team Size** | ~5 Developers |
+| Project Type | Estimated Effort | Dev. Time | Optimal Team Size | Estimated Cost (INR)* |
+| :--- | :--- | :--- | :--- | :--- |
+| **Organic** | 54.32 Person-Months | 11.41 Months | ~5 Developers | **₹54,32,000** |
+| **Semi-Detached** | 83.60 Person-Months | 11.77 Months | ~7 Developers | **₹83,60,000** |
+| **Embedded** | 127.24 Person-Months | 11.79 Months | ~11 Developers | **₹1,27,24,000** |
 
-> **Note:** These calculations estimate the effort and time required to build the application logic, views, testing suites, and configurations (19,510 lines of PHP code) on top of the CodeIgniter framework.
+*\*Assumes an average developer cost of ₹1,00,000 per month.*
