@@ -3,18 +3,10 @@
 namespace Tests\Database;
 
 use App\Models\TagModel;
-use CodeIgniter\Test\CIUnitTestCase;
-use CodeIgniter\Test\DatabaseTestTrait;
-use Tests\Support\Database\Seeds\HindBiharSeeder; // Assuming a seeder if needed, or we can use Fabricator
+use Tests\Support\DatabaseTestCase;
 
-class TagModelTest extends CIUnitTestCase
+class TagModelTest extends DatabaseTestCase
 {
-    use DatabaseTestTrait;
-
-    protected $seed = 'App\Database\Seeds\HindBiharSeeder';
-    protected $migrate     = true;
-    protected $migrateOnce = false;
-    protected $refresh     = true;
 
     protected TagModel $model;
 

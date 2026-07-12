@@ -41,7 +41,7 @@ final class ArticleModelTest extends DatabaseTestCase
             'published_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $this->assertNotEmpty($articleId);
+        $this->assertNotEmpty($articleId, "Insert failed with errors: " . print_r($articleModel->errors(), true));
 
         // Retrieve
         $article = $articleModel->find($articleId);
